@@ -583,6 +583,20 @@ function Home({setPage, goToExperiencia, onAuthClick}:{setPage:(p:any)=>void, go
 
           </div>
 
+          <form
+            onSubmit={async (e)=>{
+              e.preventDefault();
+              const fd=new FormData(e.target as HTMLFormElement);
+              await fetch("https://formspree.io/f/xwvalyzr",{method:"POST",body:fd,headers:{"Accept":"application/json"}});
+              (e.target as HTMLFormElement).reset();
+              alert("¡Gracias! Te avisamos cuando estemos listos.");
+            }}
+            style={{display:"flex",gap:10,marginBottom:32,flexWrap:"wrap"}}
+          >
+            <input type="email" name="email" required placeholder="Tu correo electrónico" style={{flex:1,minWidth:220,padding:"13px 20px",borderRadius:50,border:"1px solid #e0d5f5",background:"#faf8ff",color:"#1A0838",fontSize:15,outline:"none",fontFamily:"system-ui,sans-serif"}}/>
+            <button type="submit" style={{padding:"13px 28px",borderRadius:50,border:"none",background:"#C9A84C",color:"#1A0838",fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"system-ui,sans-serif",whiteSpace:"nowrap"}}>Yo Soy Solo Gracias</button>
+          </form>
+
           <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:24,paddingTop:48,borderTop:"1px solid #f0f0f0"}}>
 
             {[{num:"700M+",label:"Hispanohablantes en el mundo"},{num:"90%",label:"Más accesible que Mindvalley"},{num:"30",label:"Días gratis para explorar"}].map((s,i)=>(
@@ -4089,6 +4103,50 @@ function AcademiaInstructores({setPage}:{setPage:(p:any)=>void}) {
   );
 }
 
+
+
+function ListaEsperaForm() {
+  const [email, setEmail] = React.useState("");
+  const [estado, setEstado] = React.useState<"idle"|"loading"|"ok"|"error">("idle");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    setEstado("loading");
+    try {
+      const res = await fetch("https://formspree.io/f/xwvalyzr", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (res.ok) { setEstado("ok"); setEmail(""); }
+      else setEstado("error");
+    } catch { setEstado("error"); }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} style={{display:"flex",gap:10,maxWidth:480,margin:"0 auto 40px",flexWrap:"wrap" as const}}>
+      <input
+        type="email"
+        required
+        placeholder="Tu correo electrónico"
+        value={email}
+        onChange={e=>setEmail(e.target.value)}
+        disabled={estado==="loading"||estado==="ok"}
+        style={{flex:1,minWidth:200,padding:"13px 20px",borderRadius:50,border:"1px solid #e0d5f5",fontSize:15,outline:"none",fontFamily:"inherit",color:"#1A0838",background:"#faf8ff"}}
+      />
+      <button
+        type="submit"
+        disabled={estado==="loading"||estado==="ok"}
+        style={{padding:"13px 24px",borderRadius:50,border:"none",background:"#C9A84C",color:"#1A0838",fontWeight:700,fontSize:15,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap" as const,opacity:estado==="loading"?0.7:1}}
+      >
+        {estado==="ok" ? "¡Anotado!" : estado==="loading" ? "..." : "Yo Soy Solo Gracias"}
+      </button>
+      {estado==="ok" && <p style={{width:"100%",textAlign:"center" as const,fontSize:13,color:"#6B21A8",margin:"4px 0 0"}}>Te avisamos cuando abramos. ¡Gracias!</p>}
+      {estado==="error" && <p style={{width:"100%",textAlign:"center" as const,fontSize:13,color:"#E24B4A",margin:"4px 0 0"}}>Algo salió mal. Intentá de nuevo.</p>}
+    </form>
+  );
+}
 
 export default function App() {
 
