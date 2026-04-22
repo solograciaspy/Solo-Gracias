@@ -4190,14 +4190,16 @@ export default function App() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showPromoModal, setShowPromoModal] = useState(false);
 
-  // Show promo modal after 3 seconds — only once per page load
+  // Show promo modal after 3 seconds — only once, only on home
+  const promoShown = React.useRef(false);
   useEffect(() => {
-    if (page !== "home") return;
+    if (promoShown.current) return;
+    promoShown.current = true;
     const t = setTimeout(() => {
-      if(document.body.dataset.page==="home") setShowPromoModal(true);
+      if (page === "home") setShowPromoModal(true);
     }, 3000);
     return () => clearTimeout(t);
-  }, [page]);
+  }, []);
 
   const goToExperiencia = (id:string) => { setExperienciaActual(id); setPage("experiencia"); };
 
@@ -4624,10 +4626,11 @@ function PromoModal({onClose, onCTA}:{onClose:()=>void, onCTA:()=>void}) {
 
         {/* LEFT — imagen collage instructores */}
         <div style={{
-          width:"42%", flexShrink:0,
+          width:"clamp(100%, 42%, 42%)",
+          flexShrink:0,
           background:"linear-gradient(135deg, #3D1E7A 0%, #6B21A8 50%, #1A0838 100%)",
           position:"relative",
-          minHeight:420,
+          minHeight:"clamp(200px, 40vw, 420px)",
           display:"flex", flexDirection:"column",
           alignItems:"center", justifyContent:"flex-end",
           padding:"0 0 32px",
