@@ -463,6 +463,23 @@ function Home({setPage, goToExperiencia, onAuthClick}:{setPage:(p:any)=>void, go
     return ()=>window.removeEventListener("resize", check);
   },[]);
 
+  // Partículas doradas flotantes en el hero
+  useEffect(()=>{
+    const container = document.getElementById("sg-particles");
+    if(!container || container.childElementCount > 0) return;
+    const style = document.createElement("style");
+    style.textContent = `@keyframes sgParticleDrift{0%{transform:translateY(0) translateX(0);opacity:0}10%{opacity:1}90%{opacity:.35}100%{transform:translateY(-130px) translateX(35px);opacity:0}}.sg-particle{position:absolute;background:#C9A84C;border-radius:50%;animation:sgParticleDrift linear infinite}`;
+    document.head.appendChild(style);
+    for(let i=0;i<20;i++){
+      const p=document.createElement("div");
+      p.className="sg-particle";
+      const size=1+Math.random()*2.5;
+      p.style.cssText=`left:${Math.random()*100}%;bottom:${Math.random()*40}%;width:${size}px;height:${size}px;animation-duration:${5+Math.random()*9}s;animation-delay:${Math.random()*7}s;opacity:${.25+Math.random()*.45}`;
+      container.appendChild(p);
+    }
+    return ()=>{ if(container) container.innerHTML=""; };
+  },[]);
+
   return (
 
     <main style={{minHeight:"100vh",background:"white",fontFamily:"system-ui,sans-serif"}}>
@@ -470,6 +487,9 @@ function Home({setPage, goToExperiencia, onAuthClick}:{setPage:(p:any)=>void, go
       <section style={{position:"relative",overflow:"hidden",minHeight:700,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"clamp(40px,6vw,80px) clamp(16px,4vw,40px) 0",textAlign:"center"}}>
 
         <div style={{position:"absolute",inset:0,background:"radial-gradient(ellipse at 50% 0%, #7C3ABD 0%, #4C1D95 40%, #2D0F5E 75%, #1A0838 100%)"}}/>
+
+        {/* Partículas doradas flotantes */}
+        <div id="sg-particles" style={{position:"absolute",inset:0,pointerEvents:"none",overflow:"hidden",zIndex:1}}/>
 
         <div style={{position:"absolute",inset:0,backgroundImage:"url('https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=1600&q=40&fit=crop')",backgroundSize:"cover",backgroundPosition:"center",opacity:0.06}}/>
 
@@ -3751,9 +3771,9 @@ function AcademiaInstructores({setPage}:{setPage:(p:any)=>void}) {
   ];
 
   const niveles = [
-    {badge:"Nivel 1 — Básica",badgeColor:"rgba(155,109,255,0.3)",badgeText:"#C4ADFF",price:"$497",sub:"USD pago único",desc:"Certificado digital, sesión 1:1 de 60 min, fotos oficiales, bio profesional, 1 experiencia publicada. Vos grabás, nosotros editamos.",rev:"30%",img:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80&fit=crop"},
-    {badge:"Nivel 2 — Intermedia",badgeColor:"rgba(201,168,76,0.3)",badgeText:"#C9A84C",price:"$1.249",sub:"USD + $497/mes",desc:"Todo del Nivel 1 + sesión 1:1 de 90 min en vivo, rebranding Instagram completo, 2 experiencias exclusivas, video grabado y editado por nosotros.",rev:"40%",img:"https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&q=80&fit=crop"},
-    {badge:"Nivel 3 — Premium",badgeColor:"rgba(201,168,76,0.5)",badgeText:"#FFD966",price:"$2.497",sub:"USD + $497/mes",desc:"Todo del Nivel 2 + sesión 1:1 de 90 min en vivo, rebranding TODAS las redes, landing personal, 3 experiencias, Embajador Oficial.",rev:"50%",img:"https://images.unsplash.com/photo-1593811167562-9cef47bfc4d7?w=600&q=80&fit=crop"},
+    {badge:"Nivel 1 — Básica",badgeColor:"rgba(155,109,255,0.3)",badgeText:"#C4ADFF",price:"$700",sub:"USD pago único",desc:"Certificado digital, sesión 1:1 de 60 min, fotos oficiales, bio profesional, 1 experiencia publicada. Vos grabás, nosotros editamos.",rev:"30%",img:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80&fit=crop",page:"nivel-basica"},
+    {badge:"Nivel 2 — Intermedia",badgeColor:"rgba(201,168,76,0.3)",badgeText:"#C9A84C",price:"$1.500",sub:"USD + $497/mes",desc:"Todo del Nivel 1 + sesión 1:1 de 90 min en vivo, rebranding Instagram completo, 2 experiencias exclusivas, video grabado y editado por nosotros.",rev:"40%",img:"https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&q=80&fit=crop",page:"nivel-intermedia"},
+    {badge:"Nivel 3 — Premium",badgeColor:"rgba(201,168,76,0.5)",badgeText:"#FFD966",price:"$2.500",sub:"USD + $497/mes",desc:"Todo del Nivel 2 + sesión 1:1 de 90 min en vivo, rebranding TODAS las redes, landing personal, 3 experiencias, Embajador Oficial.",rev:"50%",img:"https://images.unsplash.com/photo-1593811167562-9cef47bfc4d7?w=600&q=80&fit=crop",page:"nivel-premium"},
   ];
 
   const superacion = [
@@ -3990,10 +4010,21 @@ function AcademiaInstructores({setPage}:{setPage:(p:any)=>void}) {
                 <p style={{fontFamily:"Georgia,serif",fontSize:"clamp(32px,4.5vw,48px)",fontWeight:900,color:"white"}}>{nv.price} <span style={{fontSize:"clamp(11px,1.3vw,14px)",fontWeight:400,opacity:0.5}}>{nv.sub}</span></p>
                 <p style={{fontSize:"clamp(11px,1.2vw,14px)",color:"rgba(255,255,255,0.6)",margin:"4px 0 8px",lineHeight:1.4,maxWidth:360}}>{nv.desc}</p>
                 <p style={{fontSize:"clamp(11px,1.2vw,14px)",fontWeight:700,color:"#C9A84C"}}>Revenue: {nv.rev} instructor</p>
-                <button onClick={scrollToForm} style={{display:"inline-block",background:"#6B21A8",color:"white",fontSize:"clamp(11px,1.2vw,13px)",fontWeight:700,padding:"10px 22px",borderRadius:50,border:"none",cursor:"pointer",marginTop:10,width:"fit-content"}}>Más información</button>
+                <button onClick={()=>setPage(nv.page)} style={{display:"inline-block",background:"#6B21A8",color:"white",fontSize:"clamp(11px,1.2vw,13px)",fontWeight:700,padding:"10px 22px",borderRadius:50,border:"none",cursor:"pointer",marginTop:10,width:"fit-content"}}>Más información</button>
               </div>
             </div>
           ))}
+          {/* ═══ INSTRUCTOR FUNDADOR CARD ═══ */}
+          <div className="ai-cert-card" style={{borderRadius:16,overflow:"hidden",marginBottom:14,position:"relative",minHeight:"clamp(200px,28vw,260px)"}}>
+            <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=600&q=80&fit=crop&crop=center" alt="" style={{width:"100%",height:"100%",minHeight:"clamp(200px,28vw,260px)",objectFit:"cover",position:"absolute",inset:0}}/>
+            <div className="ai-cert-overlay" style={{position:"absolute",inset:0,background:"linear-gradient(to right,rgba(10,4,24,0.88) 45%,rgba(10,4,24,0.2) 100%)",display:"flex",flexDirection:"column",justifyContent:"center",padding:"clamp(16px,3vw,28px)"}}>
+              <span style={{fontSize:8,fontWeight:700,letterSpacing:"0.12em",textTransform:"uppercase" as const,padding:"4px 10px",borderRadius:50,display:"inline-block",width:"fit-content",marginBottom:6,background:"rgba(201,168,76,0.4)",color:"#FFD966"}}>Cupo exclusivo · Solo 11 lugares</span>
+              <p style={{fontFamily:"Georgia,serif",fontSize:"clamp(28px,4vw,44px)",fontWeight:900,color:"white"}}>Instructor Fundador <span style={{fontSize:"clamp(11px,1.3vw,14px)",fontWeight:400,opacity:0.5}}>#001 — #011</span></p>
+              <p style={{fontSize:"clamp(11px,1.2vw,14px)",color:"rgba(255,255,255,0.6)",margin:"4px 0 8px",lineHeight:1.4,maxWidth:360}}>Producción cinematográfica 4K · Summit de lanzamiento · Salida a la prensa · Pauta pagada 6 meses · Consejero de la plataforma.</p>
+              <p style={{fontSize:"clamp(11px,1.2vw,14px)",fontWeight:700,color:"#C9A84C"}}>Revenue: 50% instructor · Los instructores son seleccionados</p>
+              <button onClick={()=>setPage("nivel-fundador")} style={{display:"inline-block",background:"#C9A84C",color:"#1A0838",fontSize:"clamp(11px,1.2vw,13px)",fontWeight:700,padding:"10px 22px",borderRadius:50,border:"none",cursor:"pointer",marginTop:10,width:"fit-content"}}>Ver beneficios exclusivos</button>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -4150,7 +4181,7 @@ function ListaEsperaForm() {
 
 export default function App() {
 
-  const [page, setPage] = useState<"home"|"membresia"|"pago"|"academia"|"academia-instructores"|"onboarding"|"comunidad"|"gamificacion"|"experiencia"|"neurociencia"|"registro-programas"|"programas-gratuitos">("home");
+  const [page, setPage] = useState<"home"|"membresia"|"pago"|"academia"|"academia-instructores"|"onboarding"|"comunidad"|"gamificacion"|"experiencia"|"neurociencia"|"registro-programas"|"programas-gratuitos"|"nivel-basica"|"nivel-intermedia"|"nivel-premium"|"nivel-fundador">("home");
 
   useEffect(() => { window.scrollTo(0, 0); }, [page]);
 
@@ -4203,6 +4234,14 @@ export default function App() {
       {page==="registro-programas"&&<RegistroProgramas setPage={setPage}/>}
 
       {page==="programas-gratuitos"&&<ProgramasGratuitos setPage={setPage}/>}
+
+      {page==="nivel-basica"&&<NivelDetalle nivel="basica" setPage={setPage}/>}
+
+      {page==="nivel-intermedia"&&<NivelDetalle nivel="intermedia" setPage={setPage}/>}
+
+      {page==="nivel-premium"&&<NivelDetalle nivel="premium" setPage={setPage}/>}
+
+      {page==="nivel-fundador"&&<NivelFundador setPage={setPage}/>}
 
       {showPromoModal && (
         <PromoModal
@@ -4697,6 +4736,294 @@ function PromoModal({onClose, onCTA}:{onClose:()=>void, onCTA:()=>void}) {
             <span style={{color:"#6B21A8",cursor:"pointer",textDecoration:"underline"}}>Política de privacidad</span>.
           </p>
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── HELPERS COMPARTIDOS ──────────────────────────────────────────────────────
+const WA_LINK = "https://wa.me/595986185526?text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n%20sobre%20la%20Academia%20Solo%20Gracias";
+
+const tablaIngresos = (pct:number) => {
+  const rows = [
+    {subs:"100",   pool:"$999",    ing: Math.round(999*pct/100)},
+    {subs:"500",   pool:"$4.995",  ing: Math.round(4995*pct/100)},
+    {subs:"1.000", pool:"$9.990",  ing: Math.round(9990*pct/100)},
+    {subs:"5.000", pool:"$49.950", ing: Math.round(49950*pct/100)},
+    {subs:"10.000",pool:"$99.900", ing: Math.round(99900*pct/100)},
+    {subs:"100.000",pool:"$999.000",ing: Math.round(999000*pct/100)},
+  ];
+  const V="#3D1E7A", VM="#6B21A8", G="#C9A84C", GOLD_D="#7B5800";
+  return (
+    <div style={{overflowX:"auto",marginTop:32}}>
+      <p style={{fontFamily:"Georgia,serif",fontSize:"clamp(18px,2.5vw,26px)",fontWeight:700,color:V,marginBottom:8}}>Proyección de ingresos mensuales</p>
+      <p style={{fontSize:13,color:"#666",marginBottom:16}}>Calculado sobre el {pct}% del pool proporcional de suscriptores activos.</p>
+      <table style={{width:"100%",borderCollapse:"collapse",fontSize:"clamp(11px,1.4vw,14px)"}}>
+        <thead>
+          <tr style={{background:VM}}>
+            {["Suscriptores","Ingresos SG/mes","Tu ingreso estimado","Hito"].map(h=>(
+              <th key={h} style={{padding:"10px 14px",color:"white",textAlign:"left",fontWeight:600}}>{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r,i)=>(
+            <tr key={i} style={{background:i===rows.length-1?"#FFF8E1":i%2===0?"#F9F7FF":"white",borderBottom:"1px solid #EEE"}}>
+              <td style={{padding:"10px 14px",fontFamily:"Georgia,serif",fontWeight:700,color:i===rows.length-1?GOLD_D:VM,fontSize:"clamp(13px,1.6vw,16px)"}}>{r.subs}</td>
+              <td style={{padding:"10px 14px",color:"#444"}}>{r.pool}</td>
+              <td style={{padding:"10px 14px",fontWeight:700,color:i===rows.length-1?GOLD_D:V}}>~${r.ing.toLocaleString()}/mes</td>
+              <td style={{padding:"10px 14px",color:"#888",fontSize:"clamp(10px,1.2vw,12px)",fontStyle:"italic"}}>{
+                ["Primeros alumnos","Validación del modelo","Ingreso constante","Escala real","Plataforma establecida","Impacto masivo"][i]
+              }</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p style={{fontSize:11,color:"#AAA",marginTop:8}}>* Los ingresos se calculan sobre el pool proporcional total. A mayor número de instructores activos, el pool individual se distribuye entre más participantes.</p>
+    </div>
+  );
+};
+
+// ─── NIVEL DETALLE (Básica / Intermedia / Premium) ───────────────────────────
+function NivelDetalle({nivel, setPage}:{nivel:"basica"|"intermedia"|"premium", setPage:(p:any)=>void}) {
+  const V="#3D1E7A", VM="#6B21A8", G="#C9A84C", T2="#6B5F82", BG="#F9F7FF";
+
+  const data = {
+    basica: {
+      badge:"Nivel 1 — Básica",
+      price:"$700 USD",
+      sub:"Pago único",
+      rev:"30%",
+      img:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=85&fit=crop&crop=center",
+      color:"rgba(155,109,255,0.3)",
+      textColor:"#C4ADFF",
+      desc:"El punto de partida perfecto para instructores que quieren publicar su conocimiento, obtener un certificado oficial y comenzar a generar ingresos pasivos.",
+      incluye:[
+        "Certificado digital oficial con QR verificable",
+        "Sesión estratégica 1:1 de 60 minutos con el equipo",
+        "1 experiencia publicada con al menos 1 técnica exclusiva",
+        "Foto de perfil retocada con filtro de marca Solo Gracias",
+        "Bio profesional redactada por el equipo",
+        "1 plantilla post + 1 story para Instagram",
+        "Video: grabás vos con tu celular — SG edita a estándar profesional",
+      ],
+      fase1:"30% del pool proporcional de suscriptores activos. Simple y predecible desde el día 1.",
+      fase2:"A partir del mes 7, se agrega bonus de performance según visualizaciones, completitud y reseñas de alumnos.",
+    },
+    intermedia: {
+      badge:"Nivel 2 — Intermedia",
+      price:"$1.500 USD",
+      sub:"+ $497/mes · mín. 12 meses",
+      rev:"40%",
+      img:"https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1200&q=85&fit=crop&crop=top",
+      color:"rgba(201,168,76,0.3)",
+      textColor:"#C9A84C",
+      desc:"Para instructores que quieren presencia profesional completa en redes, más experiencias publicadas y un rebranding que los posicione como referentes en su área.",
+      incluye:[
+        "Todo del Nivel Básica",
+        "Rebranding completo de Instagram: bio, 9 highlights, 12 plantillas post, 8 stories, guía de feed",
+        "Sesión 1:1 en vivo de 90 minutos",
+        "2 experiencias exclusivas publicadas",
+        "Video grabado Y editado por Solo Gracias — producción completa",
+        "Aparición en sección Expertos de sologracias.com",
+        "Participación en 1 evento online como ponente",
+      ],
+      fase1:"40% del pool proporcional. A 1.000 suscriptores representa ~$3.996/mes antes del fee de gestión.",
+      fase2:"Bonus de performance desde el mes 7. Quien crea mejor contenido, gana más.",
+    },
+    premium: {
+      badge:"Nivel 3 — Premium",
+      price:"$2.500 USD",
+      sub:"+ $497/mes · mín. 12 meses",
+      rev:"50%",
+      img:"https://images.unsplash.com/photo-1593811167562-9cef47bfc4d7?w=1200&q=85&fit=crop&crop=center",
+      color:"rgba(201,168,76,0.5)",
+      textColor:"#FFD966",
+      desc:"El nivel más completo. Para instructores que quieren el mayor impacto, la mayor visibilidad y el porcentaje de ingresos más alto de la plataforma.",
+      incluye:[
+        "Todo del Nivel Intermedia",
+        "Rebranding de TODAS las redes: Instagram + LinkedIn + Facebook + TikTok",
+        "Plan de contenido personalizado de 90 días",
+        "Landing page personal: sologracias.com/instructores/[tu-nombre]",
+        "3 experiencias exclusivas grabadas y editadas por Solo Gracias",
+        "Mención en el newsletter mensual a toda la lista B2C",
+        "Título de Embajador Oficial · 8 posts + 16 stories/mes gestionados por SG",
+      ],
+      fase1:"50% del pool proporcional — el porcentaje más alto de la plataforma. A 1.000 suscriptores: ~$4.995/mes antes del fee.",
+      fase2:"Prioridad en amplificación de contenido y bonus de performance desde el mes 7.",
+    },
+  };
+
+  const d = data[nivel];
+
+  return (
+    <div style={{background:"white",minHeight:"100vh",fontFamily:"system-ui,sans-serif"}}>
+
+      {/* Hero con imagen */}
+      <div style={{position:"relative",height:"clamp(280px,40vw,420px)",overflow:"hidden"}}>
+        <img src={d.img} alt={d.badge} style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center"}}/>
+        <div style={{position:"absolute",inset:0,background:"linear-gradient(to right,rgba(10,4,24,0.88) 50%,rgba(10,4,24,0.3) 100%)"}}/>
+        <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",justifyContent:"center",padding:"clamp(24px,5vw,60px)"}}>
+          <button onClick={()=>setPage("academia-instructores")} style={{background:"none",border:"none",color:"rgba(255,255,255,0.5)",fontSize:12,cursor:"pointer",textAlign:"left",marginBottom:16,padding:0}}>← Volver a la Academia</button>
+          <span style={{fontSize:9,fontWeight:700,letterSpacing:"0.14em",textTransform:"uppercase" as const,padding:"4px 12px",borderRadius:50,display:"inline-block",width:"fit-content",marginBottom:12,background:d.color,color:d.textColor}}>{d.badge}</span>
+          <h1 style={{fontFamily:"Georgia,serif",fontSize:"clamp(32px,5vw,60px)",fontWeight:900,color:"white",lineHeight:1.05,marginBottom:8}}>{d.price} <span style={{fontSize:"clamp(13px,1.5vw,18px)",fontWeight:300,opacity:0.55}}>{d.sub}</span></h1>
+          <p style={{fontSize:"clamp(12px,1.5vw,16px)",color:"rgba(255,255,255,0.65)",maxWidth:520,lineHeight:1.5}}>{d.desc}</p>
+          <p style={{fontSize:"clamp(12px,1.4vw,15px)",fontWeight:700,color:G,marginTop:12}}>Revenue share: {d.rev} para el instructor</p>
+        </div>
+      </div>
+
+      {/* Aviso selección */}
+      <div style={{background:"#FFF8E1",borderBottom:"1px solid rgba(201,168,76,0.3)",padding:"12px clamp(20px,5vw,60px)",display:"flex",alignItems:"center",gap:10}}>
+        <span style={{fontSize:16}}>⭐</span>
+        <p style={{fontSize:"clamp(11px,1.3vw,13px)",color:"#7B5800",fontWeight:500}}>Los instructores son seleccionados por el equipo de Solo Gracias. Al postularte, el equipo revisará tu perfil y se pondrá en contacto contigo.</p>
+      </div>
+
+      <div style={{maxWidth:860,margin:"0 auto",padding:"clamp(32px,5vw,56px) clamp(20px,4vw,40px)"}}>
+
+        {/* Lo que incluye */}
+        <h2 style={{fontFamily:"Georgia,serif",fontSize:"clamp(22px,3vw,32px)",fontWeight:700,color:V,marginBottom:20}}>¿Qué incluye este nivel?</h2>
+        <div style={{display:"flex",flexDirection:"column" as const,gap:10,marginBottom:48}}>
+          {d.incluye.map((item,i)=>(
+            <div key={i} style={{display:"flex",alignItems:"flex-start",gap:12,padding:"14px 18px",background:i%2===0?BG:"white",borderRadius:10,border:"1px solid rgba(155,109,255,0.1)"}}>
+              <span style={{color:G,fontWeight:700,fontSize:14,flexShrink:0,marginTop:1}}>✓</span>
+              <span style={{fontSize:"clamp(13px,1.5vw,15px)",color:"#333",lineHeight:1.5}}>{item}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Modelo de ingresos */}
+        <h2 style={{fontFamily:"Georgia,serif",fontSize:"clamp(22px,3vw,32px)",fontWeight:700,color:V,marginBottom:8}}>Modelo de ingresos</h2>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16,marginBottom:16}}>
+          {[
+            {titulo:"Fase 1 — Primeros 6 meses",desc:d.fase1,bg:BG,border:"rgba(155,109,255,0.15)"},
+            {titulo:"Fase 2 — Post 6 meses",desc:d.fase2,bg:"#FFF8E1",border:"rgba(201,168,76,0.3)"},
+          ].map((fase,i)=>(
+            <div key={i} style={{background:fase.bg,borderRadius:12,padding:"18px 20px",border:`1px solid ${fase.border}`}}>
+              <p style={{fontSize:11,fontWeight:700,color:i===0?VM:"#7B5800",letterSpacing:"0.06em",textTransform:"uppercase" as const,marginBottom:6}}>{fase.titulo}</p>
+              <p style={{fontSize:"clamp(12px,1.4vw,14px)",color:"#444",lineHeight:1.6}}>{fase.desc}</p>
+            </div>
+          ))}
+        </div>
+
+        {tablaIngresos(parseInt(d.rev))}
+
+        {/* CTA */}
+        <div style={{marginTop:48,textAlign:"center" as const,padding:"40px 24px",background:BG,borderRadius:16,border:"1px solid rgba(155,109,255,0.15)"}}>
+          <p style={{fontSize:11,fontWeight:600,color:VM,letterSpacing:"0.08em",textTransform:"uppercase" as const,marginBottom:8}}>¿Listo para empezar?</p>
+          <h3 style={{fontFamily:"Georgia,serif",fontSize:"clamp(20px,3vw,30px)",fontWeight:700,color:V,marginBottom:8}}>Los instructores son seleccionados.</h3>
+          <p style={{fontSize:"clamp(12px,1.4vw,14px)",color:T2,marginBottom:24,maxWidth:480,margin:"0 auto 24px"}}>Escribinos por WhatsApp y el equipo de Solo Gracias revisará tu perfil. Sin compromiso.</p>
+          <a href={WA_LINK} target="_blank" rel="noopener noreferrer"
+            style={{display:"inline-flex",alignItems:"center",gap:10,background:"#25D366",color:"white",padding:"16px 36px",borderRadius:50,fontWeight:700,fontSize:"clamp(13px,1.5vw,15px)",textDecoration:"none",transition:"opacity 0.2s"}}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Postularme por WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── NIVEL FUNDADOR ───────────────────────────────────────────────────────────
+function NivelFundador({setPage}:{setPage:(p:any)=>void}) {
+  const V="#3D1E7A", VM="#6B21A8", G="#C9A84C", T2="#6B5F82", BG="#F9F7FF";
+
+  const beneficios = [
+    {titulo:"Número permanente #001 al #011",desc:"Irrepetible en la historia de la plataforma. Cuando haya 500 instructores, ser el #003 es algo que nadie más puede tener. Tu número aparece en tu perfil, materiales y comunicaciones para siempre."},
+    {titulo:"Producción cinematográfica 4K",desc:"Estudio profesional · Cámara 4K · Iluminación de 3 puntos · Styling y fondo con identidad de marca · Mínimo 10 episodios de 15-25 min cada uno."},
+    {titulo:"Post-producción estilo Gaia",desc:"Motion graphics animados · Color grading cinematográfico · Música licenciada · Efectos visuales premium · Intro/outro con logo animado · Subtítulos en ES, EN y PT."},
+    {titulo:"Workbooks diseñados",desc:"PDFs descargables por episodio con identidad visual del instructor + Solo Gracias. Contenido que acompaña cada episodio."},
+    {titulo:"Summit de Lanzamiento",desc:"Evento online de 1 día con los 11 Fundadores · Producción en vivo con gráficos · 5.000-20.000 personas en directo · Grabado como contenido evergreen en la plataforma."},
+    {titulo:"Salida a la prensa",desc:"Comunicado oficial distribuido a medios de Paraguay, Argentina, Colombia y México · Pitch a TV, radio y medios digitales · Kit de prensa personal completo."},
+    {titulo:"Pauta pagada 6 meses",desc:"Ads en Instagram y TikTok gestionados y pagados por Solo Gracias · Targeting específico a audiencia LATAM bienestar · Desde el día 1 de publicación."},
+    {titulo:"Prioridad absoluta en redes",desc:"Siempre primeros en el slot semanal de amplificación. Nunca esperan turno. Prioridad en toda la comunicación de Solo Gracias."},
+    {titulo:"Consejero de la plataforma",desc:"Voz real en las decisiones importantes. Consultados antes de cambios. Reunión directa con el equipo fundador mensual."},
+    {titulo:"Revenue share: 50%",desc:"El porcentaje más alto disponible en la plataforma. Igual que el nivel Premium pero con todos los beneficios adicionales exclusivos del Fundador."},
+  ];
+
+  return (
+    <div style={{background:"white",minHeight:"100vh",fontFamily:"system-ui,sans-serif"}}>
+
+      {/* Hero */}
+      <div style={{position:"relative",height:"clamp(300px,45vw,480px)",overflow:"hidden"}}>
+        <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=1400&q=85&fit=crop&crop=center" alt="Instructor Fundador" style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center"}}/>
+        <div style={{position:"absolute",inset:0,background:"linear-gradient(to right,rgba(10,4,24,0.92) 55%,rgba(10,4,24,0.4) 100%)"}}/>
+        <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",justifyContent:"center",padding:"clamp(24px,5vw,60px)"}}>
+          <button onClick={()=>setPage("academia-instructores")} style={{background:"none",border:"none",color:"rgba(255,255,255,0.5)",fontSize:12,cursor:"pointer",textAlign:"left",marginBottom:16,padding:0}}>← Volver a la Academia</button>
+          <span style={{fontSize:9,fontWeight:700,letterSpacing:"0.14em",textTransform:"uppercase" as const,padding:"4px 12px",borderRadius:50,display:"inline-block",width:"fit-content",marginBottom:12,background:"rgba(201,168,76,0.4)",color:"#FFD966"}}>Cupo exclusivo · Solo 11 lugares en la historia</span>
+          <h1 style={{fontFamily:"Georgia,serif",fontSize:"clamp(36px,5.5vw,68px)",fontWeight:900,color:"white",lineHeight:1.0,marginBottom:12}}>Instructor Fundador</h1>
+          <p style={{fontFamily:"Georgia,serif",fontSize:"clamp(14px,2vw,22px)",color:G,fontStyle:"italic",marginBottom:12}}>#001 — #011 · Para siempre.</p>
+          <p style={{fontSize:"clamp(12px,1.5vw,16px)",color:"rgba(255,255,255,0.65)",maxWidth:540,lineHeight:1.6}}>Los primeros 11 instructores de Solo Gracias no son clientes — son co-constructores de la plataforma y tienen un lugar en la historia que nadie más podrá tener.</p>
+        </div>
+      </div>
+
+      {/* Aviso selección */}
+      <div style={{background:"#1A0838",padding:"16px clamp(20px,5vw,60px)",display:"flex",alignItems:"center",gap:12}}>
+        <span style={{color:G,fontSize:18,flexShrink:0}}>⭐</span>
+        <p style={{fontSize:"clamp(11px,1.3vw,14px)",color:"rgba(255,255,255,0.8)",fontWeight:500}}>
+          <strong style={{color:G}}>Los instructores son seleccionados por el equipo de Solo Gracias.</strong> Las vacantes de Instructor Fundador son solo 11 — para siempre. Al postularte, el equipo revisará tu perfil y se pondrá en contacto contigo.
+        </p>
+      </div>
+
+      <div style={{maxWidth:860,margin:"0 auto",padding:"clamp(32px,5vw,56px) clamp(20px,4vw,40px)"}}>
+
+        {/* Por qué ser Fundador */}
+        <div style={{textAlign:"center" as const,marginBottom:48}}>
+          <h2 style={{fontFamily:"Georgia,serif",fontSize:"clamp(24px,3.5vw,38px)",fontWeight:700,color:V,marginBottom:12}}>¿Por qué ser Instructor Fundador?</h2>
+          <p style={{fontSize:"clamp(13px,1.5vw,16px)",color:T2,maxWidth:620,margin:"0 auto",lineHeight:1.7}}>
+            Cuando Solo Gracias tenga millones de usuarios en toda Latinoamérica, tu nombre y tu número van a estar ahí — desde el primer día. No es un nivel más. Es ser parte de la historia.
+          </p>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:16,marginTop:32}}>
+            {[
+              {n:"11",label:"Lugares totales en la historia"},
+              {n:"50%","label":"Revenue share — el máximo"},
+              {n:"∞","label":"Legado permanente"},
+            ].map((s,i)=>(
+              <div key={i} style={{background:BG,borderRadius:12,padding:"20px 16px",border:"1px solid rgba(155,109,255,0.15)"}}>
+                <p style={{fontFamily:"Georgia,serif",fontSize:"clamp(28px,4vw,44px)",fontWeight:700,color:VM,lineHeight:1}}>{s.n}</p>
+                <p style={{fontSize:"clamp(10px,1.2vw,12px)",color:T2,marginTop:4,letterSpacing:"0.04em"}}>{s.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Beneficios */}
+        <h2 style={{fontFamily:"Georgia,serif",fontSize:"clamp(22px,3vw,32px)",fontWeight:700,color:V,marginBottom:20}}>Todos los beneficios incluidos</h2>
+        <div style={{display:"flex",flexDirection:"column" as const,gap:10,marginBottom:48}}>
+          {beneficios.map((b,i)=>(
+            <div key={i} style={{display:"flex",alignItems:"flex-start",gap:14,padding:"16px 20px",background:i%2===0?BG:"white",borderRadius:10,border:"1px solid rgba(155,109,255,0.1)"}}>
+              <span style={{color:G,fontWeight:700,fontSize:16,flexShrink:0,marginTop:2}}>✦</span>
+              <div>
+                <p style={{fontSize:"clamp(13px,1.5vw,15px)",fontWeight:700,color:V,marginBottom:3}}>{b.titulo}</p>
+                <p style={{fontSize:"clamp(11px,1.3vw,13px)",color:T2,lineHeight:1.6}}>{b.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Tabla de ingresos */}
+        {tablaIngresos(50)}
+
+        {/* Precio y CTA */}
+        <div style={{marginTop:56,background:"#0F0820",borderRadius:20,padding:"clamp(28px,4vw,48px)",textAlign:"center" as const}}>
+          <p style={{fontSize:11,fontWeight:700,color:G,letterSpacing:"0.12em",textTransform:"uppercase" as const,marginBottom:12}}>Inversión para ser Instructor Fundador</p>
+          <p style={{fontFamily:"Georgia,serif",fontSize:"clamp(36px,5vw,60px)",fontWeight:900,color:"white",lineHeight:1}}>$3.500 USD</p>
+          <p style={{fontSize:"clamp(13px,1.5vw,16px)",color:"rgba(255,255,255,0.5)",marginTop:4,marginBottom:8}}>Pago único de ingreso</p>
+          <p style={{fontFamily:"Georgia,serif",fontSize:"clamp(18px,2.5vw,28px)",fontWeight:700,color:G}}>+ $997/mes</p>
+          <p style={{fontSize:"clamp(11px,1.3vw,14px)",color:"rgba(255,255,255,0.4)",marginBottom:32}}>Gestión mensual continua</p>
+
+          <div style={{background:"rgba(201,168,76,0.1)",borderRadius:12,padding:"16px 20px",marginBottom:32,border:"1px solid rgba(201,168,76,0.25)"}}>
+            <p style={{fontSize:"clamp(11px,1.3vw,13px)",color:G,lineHeight:1.6}}>
+              <strong>Solo 11 lugares · Para siempre.</strong> Los instructores son seleccionados por el equipo de Solo Gracias. Al postularte, revisaremos tu perfil y nos pondremos en contacto contigo.
+            </p>
+          </div>
+
+          <a href={WA_LINK} target="_blank" rel="noopener noreferrer"
+            style={{display:"inline-flex",alignItems:"center",gap:12,background:"#25D366",color:"white",padding:"18px 44px",borderRadius:50,fontWeight:700,fontSize:"clamp(14px,1.6vw,17px)",textDecoration:"none"}}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Postularme por WhatsApp
+          </a>
+        </div>
+
       </div>
     </div>
   );
