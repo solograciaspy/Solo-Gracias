@@ -4602,7 +4602,7 @@ function PromoModal({onClose, onCTA}:{onClose:()=>void, onCTA:()=>void}) {
       <div
         onClick={e => e.stopPropagation()}
         style={{
-          width:"100%", maxWidth:860,
+          width:"100%", maxWidth:"min(860px,95vw)",
           borderRadius:20,
           overflow:"hidden",
           display:"flex",
