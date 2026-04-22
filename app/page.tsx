@@ -4784,247 +4784,532 @@ const tablaIngresos = (pct:number) => {
   );
 };
 
-// ─── NIVEL DETALLE (Básica / Intermedia / Premium) ───────────────────────────
-function NivelDetalle({nivel, setPage}:{nivel:"basica"|"intermedia"|"premium", setPage:(p:any)=>void}) {
-  const V="#3D1E7A", VM="#6B21A8", G="#C9A84C", T2="#6B5F82", BG="#F9F7FF";
+// ─── HELPERS COMPARTIDOS ──────────────────────────────────────────────────────
+const WA_LINK = "https://wa.me/595986185526?text=Hola%2C+quiero+postularme+a+la+Academia+Solo+Gracias";
 
-  const data = {
-    basica: {
-      badge:"Nivel 1 — Básica",
-      price:"$700 USD",
-      sub:"Pago único",
-      rev:"30%",
-      img:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=85&fit=crop&crop=center",
-      color:"rgba(155,109,255,0.3)",
-      textColor:"#C4ADFF",
-      desc:"El punto de partida perfecto para instructores que quieren publicar su conocimiento, obtener un certificado oficial y comenzar a generar ingresos pasivos.",
+const NIVEL_CSS = `
+@keyframes sgNivNavIn{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes sgNivHeroUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes sgNivImgZoom{from{transform:scale(1)}to{transform:scale(1.04)}}
+@keyframes sgNivShimmer{0%{background-position:200% center}100%{background-position:-200% center}}
+@keyframes sgNivLineGrow{from{width:0;opacity:0}to{width:100%;opacity:1}}
+@keyframes sgNivItemIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
+@keyframes sgNivFadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+.sgn-nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;background:rgba(255,255,255,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(61,30,122,.07);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(24px,5vw,60px);animation:sgNivNavIn .6s cubic-bezier(.22,1,.36,1) both}
+.sgn-logo{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer;background:none;border:none}
+.sgn-logo-text{font-family:Georgia,serif;color:#3D1E7A;font-size:17px;font-weight:300;letter-spacing:.14em;text-transform:uppercase}
+.sgn-back{font-size:13px;color:#5E4A8A;background:none;border:none;cursor:pointer;transition:color .2s}
+.sgn-back:hover{color:#6B21A8}
+.sgn-cta{padding:10px 24px;background:#6B21A8;color:white;border-radius:50px;font-size:13px;font-weight:500;border:none;cursor:pointer;transition:all .2s;text-decoration:none}
+.sgn-cta:hover{background:#3D1E7A;transform:translateY(-1px)}
+
+.sgn-hero{margin-top:64px;position:relative;height:calc(100vh - 64px);min-height:520px;max-height:760px;overflow:hidden;display:flex;align-items:flex-end}
+.sgn-hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;animation:sgNivImgZoom 12s ease-out both}
+.sgn-hero-grad{position:absolute;inset:0;background:linear-gradient(115deg,rgba(10,4,20,.88) 0%,rgba(61,30,122,.5) 55%,rgba(10,4,20,.2) 100%)}
+.sgn-hero-grad2{position:absolute;bottom:0;left:0;right:0;height:40%;background:linear-gradient(to top,rgba(10,4,20,.7),transparent)}
+.sgn-hero-c{position:relative;z-index:2;padding:clamp(32px,5vw,64px);max-width:680px}
+.sgn-badge{display:inline-flex;align-items:center;gap:7px;padding:5px 14px;border-radius:50px;border:1px solid rgba(201,168,76,.4);background:rgba(201,168,76,.07);font-size:9px;font-weight:600;color:rgba(255,255,255,.7);letter-spacing:.14em;text-transform:uppercase;margin-bottom:18px;animation:sgNivHeroUp .7s cubic-bezier(.22,1,.36,1) .4s both}
+.sgn-badge-dot{width:5px;height:5px;background:#C9A84C;border-radius:50%}
+.sgn-title{font-family:Georgia,serif;font-size:clamp(52px,8vw,88px);font-weight:400;color:white;line-height:.92;letter-spacing:-.02em;margin-bottom:14px;animation:sgNivHeroUp .8s cubic-bezier(.22,1,.36,1) .55s both}
+.sgn-title-gold{background:linear-gradient(90deg,#C9A84C 0%,#E8C96A 40%,#C9A84C 70%,#E8C96A 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:sgNivShimmer 4s linear infinite}
+.sgn-desc{font-size:clamp(13px,1.7vw,16px);color:rgba(255,255,255,.55);line-height:1.75;max-width:460px;font-weight:300;margin-bottom:28px;animation:sgNivHeroUp .7s cubic-bezier(.22,1,.36,1) .72s both}
+.sgn-meta{display:flex;gap:clamp(24px,4vw,48px);animation:sgNivHeroUp .7s cubic-bezier(.22,1,.36,1) .88s both}
+.sgn-mv{font-family:Georgia,serif;font-size:clamp(26px,4vw,38px);font-weight:400;color:white;line-height:1;margin-bottom:3px}
+.sgn-mk{font-size:10px;color:rgba(255,255,255,.3);letter-spacing:.08em;text-transform:uppercase}
+
+.sgn-main{max-width:980px;margin:0 auto;padding:80px clamp(20px,4vw,40px) 0}
+.sgn-reveal{opacity:0;transform:translateY(24px);transition:opacity .75s cubic-bezier(.22,1,.36,1),transform .75s cubic-bezier(.22,1,.36,1)}
+.sgn-reveal.sgn-in{opacity:1;transform:translateY(0)}
+.sgn-d1{transition-delay:.1s}.sgn-d2{transition-delay:.2s}.sgn-d3{transition-delay:.3s}
+
+.sgn-lbl{font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#C9A84C;margin-bottom:12px;display:flex;align-items:center;gap:12px}
+.sgn-lbl::after{content:"";flex:1;height:1px;background:linear-gradient(to right,rgba(201,168,76,.25),transparent);animation:sgNivLineGrow .8s cubic-bezier(.22,1,.36,1) .2s both}
+.sgn-tit{font-family:Georgia,serif;font-size:clamp(28px,4.5vw,46px);font-weight:400;color:#3D1E7A;line-height:1.05;margin-bottom:10px}
+.sgn-sub{font-size:14px;color:#5E4A8A;font-weight:300;line-height:1.75;margin-bottom:48px;max-width:520px}
+
+.sgn-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:rgba(61,30,122,.06);border:1px solid rgba(61,30,122,.06);border-radius:16px;overflow:hidden;margin-bottom:88px}
+.sgn-item{padding:24px 26px;background:white;display:flex;gap:16px;align-items:flex-start;transition:background .2s}
+.sgn-item:hover{background:#F4F0FB}
+.sgn-num{font-family:Georgia,serif;font-size:11px;font-weight:500;color:rgba(155,109,255,.5);letter-spacing:.1em;padding-top:3px;flex-shrink:0;min-width:24px}
+.sgn-it{font-size:14px;font-weight:500;color:#1A0A2E;margin-bottom:4px;line-height:1.3}
+.sgn-id{font-size:12px;color:#5E4A8A;line-height:1.6;font-weight:300}
+
+.sgn-phase{padding:28px 30px;border-radius:14px;border:1px solid rgba(155,109,255,.12);background:#F4F0FB;position:relative;overflow:hidden;margin-bottom:40px;transition:transform .3s cubic-bezier(.22,1,.36,1),box-shadow .3s}
+.sgn-phase:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(61,30,122,.08)}
+.sgn-phase::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,#9B6DFF,#6B21A8)}
+.sgn-ptag{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#6B21A8;margin-bottom:10px}
+.sgn-ptit{font-family:Georgia,serif;font-size:19px;font-weight:500;color:#3D1E7A;margin-bottom:8px}
+.sgn-pdesc{font-size:12.5px;color:#5E4A8A;line-height:1.7;font-weight:300}
+
+.sgn-tbl-lbl{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#5E4A8A;margin-bottom:16px}
+.sgn-tbl{width:100%;border-collapse:separate;border-spacing:0;border-radius:14px;overflow:hidden;border:1px solid rgba(61,30,122,.08);margin-bottom:8px}
+.sgn-tbl thead tr{background:#3D1E7A}
+.sgn-tbl th{padding:13px 18px;text-align:left;font-size:10px;font-weight:500;color:rgba(255,255,255,.6);letter-spacing:.08em;text-transform:uppercase}
+.sgn-tbl tbody tr{transition:background .15s}
+.sgn-tbl tbody tr:nth-child(even){background:#F4F0FB}
+.sgn-tbl tbody tr:nth-child(odd){background:white}
+.sgn-tbl tbody tr.sgn-hl{background:#FFF8E1 !important}
+.sgn-tbl tbody tr:hover{background:rgba(155,109,255,.05) !important}
+.sgn-tbl td{padding:13px 18px;font-size:13px;color:#1A0A2E;border-top:1px solid rgba(61,30,122,.04);transition:transform .2s cubic-bezier(.22,1,.36,1)}
+.sgn-tbl tbody tr:hover td{transform:translateX(3px)}
+.sgn-ts{font-family:Georgia,serif;font-size:19px;font-weight:400;color:#6B21A8}
+.sgn-hl .sgn-ts{color:#7B5800}.sgn-ti{font-weight:500;color:#3D1E7A}.sgn-hl .sgn-ti{color:#7B5800;font-weight:600}
+.sgn-th{font-size:11px;color:#5E4A8A;font-style:italic}
+.sgn-tnote{font-size:11px;color:rgba(61,30,122,.3);margin-top:10px;font-style:italic;line-height:1.6;margin-bottom:88px}
+
+.sgn-cta{margin:0 0 88px;border-radius:20px;overflow:hidden}
+.sgn-cta-inner{padding:clamp(48px,7vw,72px);background:linear-gradient(135deg,#3D1E7A 0%,#6B21A8 60%,#8B2FC9 100%);position:relative;overflow:hidden;transition:box-shadow .4s}
+.sgn-cta-inner:hover{box-shadow:0 20px 60px rgba(107,33,168,.25)}
+.sgn-cta-inner::before{content:"";position:absolute;top:-80px;right:-80px;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.03)}
+.sgn-cta-ey{font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#E8C96A;margin-bottom:14px;position:relative;z-index:1}
+.sgn-cta-tit{font-family:Georgia,serif;font-size:clamp(28px,4vw,42px);font-weight:400;color:white;line-height:1.1;margin-bottom:12px;position:relative;z-index:1}
+.sgn-cta-desc{font-size:14px;color:rgba(255,255,255,.55);line-height:1.75;font-weight:300;max-width:500px;margin-bottom:24px;position:relative;z-index:1}
+.sgn-cta-div{width:40px;height:1px;background:rgba(201,168,76,.4);margin-bottom:16px;position:relative;z-index:1}
+.sgn-cta-note{font-size:12px;color:rgba(255,255,255,.25);font-style:italic;position:relative;z-index:1}
+
+.sgn-footer{border-top:1px solid rgba(61,30,122,.06);padding:24px clamp(20px,4vw,40px);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;max-width:980px;margin:0 auto}
+.sgn-fc{font-size:11px;color:rgba(61,30,122,.25)}
+.sgn-fl a{font-size:11px;color:rgba(61,30,122,.25);text-decoration:none;margin-left:20px}
+.sgn-fl a:hover{color:#6B21A8}
+
+/* FUNDADOR DARK THEME */
+.sgn-dark{background:#0A0414;color:white;min-height:100vh}
+@keyframes sgFundNum{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes sgFundPart{0%{transform:translateY(0) translateX(0);opacity:0}15%{opacity:.8}90%{opacity:.3}100%{transform:translateY(-130px) translateX(30px);opacity:0}}
+@keyframes sgFundBorder{0%,100%{border-color:rgba(201,168,76,.15)}50%{border-color:rgba(201,168,76,.4)}}
+.sgn-dark .sgn-nav{background:rgba(10,4,20,.85);border-color:rgba(201,168,76,.08)}
+.sgn-dark .sgn-logo-text{color:#E8C96A}
+.sgn-dark .sgn-back{color:rgba(255,255,255,.35)}.sgn-dark .sgn-back:hover{color:#E8C96A}
+.sgn-dark .sgn-cta{background:#C9A84C;color:#0A0414}
+.sgn-dark .sgn-cta:hover{background:#E8C96A}
+.sgn-fund-num{font-family:Georgia,serif;font-size:clamp(80px,14vw,160px);font-weight:300;color:rgba(201,168,76,.07);line-height:.85;position:absolute;top:clamp(40px,6vw,80px);left:clamp(40px,6vw,80px);letter-spacing:-.04em;pointer-events:none;animation:sgFundNum 1.5s 1s both}
+.sgn-fund-eyebrow{display:inline-flex;align-items:center;gap:10px;margin-bottom:20px;font-size:10px;font-weight:500;color:#E8C96A;letter-spacing:.16em;text-transform:uppercase}
+.sgn-fund-eyebrow::before,.sgn-fund-eyebrow::after{content:"";height:1px;background:rgba(201,168,76,.4);flex:1;min-width:20px;display:inline-block}
+.sgn-fund-sub{font-family:Georgia,serif;font-size:clamp(20px,3vw,30px);font-weight:300;background:linear-gradient(90deg,#C9A84C 0%,#E8C96A 35%,#fffbe0 50%,#E8C96A 65%,#C9A84C 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:sgNivShimmer 5s linear infinite;margin-bottom:20px}
+.sgn-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(201,168,76,.08);border-radius:16px;overflow:hidden;margin:80px 0}
+.sgn-stat{padding:40px 32px;background:rgba(255,255,255,.02);text-align:center;transition:background .2s}
+.sgn-stat:hover{background:rgba(201,168,76,.04)}
+.sgn-sval{font-family:Georgia,serif;font-size:clamp(48px,7vw,72px);font-weight:400;color:white;line-height:1;margin-bottom:6px;transition:transform .3s,color .3s}
+.sgn-stat:hover .sgn-sval{transform:scale(1.05);color:#E8C96A}
+.sgn-skey{font-size:11px;color:rgba(255,255,255,.3);letter-spacing:.1em;text-transform:uppercase}
+.sgn-dark .sgn-lbl{color:#C9A84C}
+.sgn-dark .sgn-lbl::after{background:linear-gradient(to right,rgba(201,168,76,.3),transparent)}
+.sgn-dark .sgn-tit{color:white}
+.sgn-dark .sgn-sub{color:rgba(255,255,255,.45)}
+.sgn-why{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:rgba(255,255,255,.04);border-radius:20px;overflow:hidden;margin-bottom:88px}
+.sgn-why-item{padding:36px 32px;background:rgba(255,255,255,.015);transition:background .2s,transform .3s cubic-bezier(.22,1,.36,1);position:relative}
+.sgn-why-item:hover{background:rgba(201,168,76,.04);transform:translateY(-2px)}
+.sgn-why-item::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(201,168,76,.15),transparent)}
+.sgn-wn{font-family:Georgia,serif;font-size:11px;font-weight:500;color:rgba(201,168,76,.4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
+.sgn-wt{font-family:Georgia,serif;font-size:clamp(18px,2.2vw,24px);font-weight:500;color:white;margin-bottom:10px;line-height:1.2}
+.sgn-wd{font-size:13px;color:rgba(255,255,255,.4);line-height:1.75;font-weight:300}
+.sgn-ben{padding:28px 0;border-bottom:1px solid rgba(255,255,255,.04);display:grid;grid-template-columns:48px 1fr;gap:20px;align-items:start;transition:all .25s cubic-bezier(.22,1,.36,1)}
+.sgn-ben:last-child{border-bottom:none}
+.sgn-ben:hover .sgn-bt{color:#E8C96A}
+.sgn-ben:hover .sgn-bicon{border-color:rgba(201,168,76,.5);color:#E8C96A}
+.sgn-bicon{width:44px;height:44px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-size:16px;color:#C9A84C;transition:all .2s;flex-shrink:0}
+.sgn-bt{font-family:Georgia,serif;font-size:clamp(17px,2vw,22px);font-weight:500;color:white;margin-bottom:6px;line-height:1.2;transition:color .2s}
+.sgn-bd{font-size:13px;color:rgba(255,255,255,.38);line-height:1.7;font-weight:300}
+.sgn-dark .sgn-tbl thead tr{background:rgba(61,30,122,.8)}
+.sgn-dark .sgn-tbl tbody tr:nth-child(even){background:rgba(255,255,255,.02)}
+.sgn-dark .sgn-tbl tbody tr:nth-child(odd){background:rgba(255,255,255,.01)}
+.sgn-dark .sgn-tbl tbody tr.sgn-hl{background:rgba(201,168,76,.07) !important}
+.sgn-dark .sgn-tbl tbody tr:hover{background:rgba(201,168,76,.05) !important}
+.sgn-dark .sgn-tbl td{color:rgba(255,255,255,.6);border-top:1px solid rgba(255,255,255,.03)}
+.sgn-dark .sgn-ts{color:white}.sgn-dark .sgn-hl .sgn-ts{color:#C9A84C}
+.sgn-dark .sgn-ti{color:rgba(255,255,255,.85)}.sgn-dark .sgn-hl .sgn-ti{color:#C9A84C}
+.sgn-dark .sgn-th{color:rgba(255,255,255,.25)}
+.sgn-dark .sgn-tnote{color:rgba(255,255,255,.2)}
+.sgn-price-card{border-radius:24px;border:1px solid rgba(201,168,76,.15);overflow:hidden;position:relative;background:linear-gradient(145deg,rgba(201,168,76,.04) 0%,rgba(255,255,255,.01) 100%);animation:sgFundBorder 4s ease-in-out infinite;margin-bottom:80px}
+.sgn-price-top{padding:clamp(40px,6vw,72px);text-align:center;position:relative}
+.sgn-price-top::before{content:"";position:absolute;inset:0;border-radius:24px;background:radial-gradient(ellipse at 50% 0%,rgba(201,168,76,.08) 0%,transparent 60%);pointer-events:none}
+.sgn-pcupo{display:inline-flex;align-items:center;gap:8px;padding:7px 18px;border-radius:50px;border:1px solid rgba(201,168,76,.25);background:rgba(201,168,76,.06);font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:#E8C96A;margin-bottom:32px}
+.sgn-pdot{width:4px;height:4px;background:#C9A84C;border-radius:50%}
+.sgn-pamount{font-family:Georgia,serif;font-size:clamp(56px,9vw,96px);font-weight:300;color:white;line-height:1;margin-bottom:4px}
+.sgn-pamount em{color:#C9A84C;font-style:normal;font-size:.6em}
+.sgn-psub{font-size:14px;color:rgba(255,255,255,.3);margin-bottom:24px}
+.sgn-pmonthly{font-family:Georgia,serif;font-size:clamp(24px,3.5vw,36px);font-weight:400;color:#E8C96A;margin-bottom:8px}
+.sgn-pmonthlysub{font-size:13px;color:rgba(255,255,255,.2);margin-bottom:40px}
+.sgn-pnote{max-width:480px;margin:0 auto 40px;padding:16px 24px;border-radius:12px;background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.12);font-size:12px;color:rgba(255,255,255,.45);line-height:1.7}
+.sgn-pcta{font-size:13px;color:rgba(255,255,255,.3);font-style:italic;line-height:1.6}
+.sgn-pcta strong{color:rgba(201,168,76,.7);font-style:normal}
+.sgn-dark .sgn-footer{border-color:rgba(201,168,76,.06)}
+.sgn-dark .sgn-fc{color:rgba(255,255,255,.15)}
+.sgn-dark .sgn-fl a{color:rgba(255,255,255,.15)}.sgn-dark .sgn-fl a:hover{color:#E8C96A}
+@media(max-width:768px){
+  .sgn-grid{grid-template-columns:1fr}
+  .sgn-meta{gap:20px}
+  .sgn-stats{grid-template-columns:1fr}
+  .sgn-why{grid-template-columns:1fr}
+}
+`;
+
+// ─── TABLA INGRESOS HELPER ────────────────────────────────────────────────────
+const SgnTablaIngresos = ({pct}:{pct:number}) => {
+  const rows = [
+    {s:"100",   p:"$999",     hito:"Primeros alumnos"},
+    {s:"500",   p:"$4.995",   hito:"Validación del modelo"},
+    {s:"1.000", p:"$9.990",   hito:"Ingreso constante"},
+    {s:"5.000", p:"$49.950",  hito:"Escala real"},
+    {s:"10.000",p:"$99.900",  hito:"Plataforma establecida"},
+    {s:"100.000",p:"$999.000",hito:"Impacto masivo"},
+  ];
+  const pools = [999,4995,9990,49950,99900,999000];
+  return (
+    <table className="sgn-tbl">
+      <thead><tr>
+        <th>Suscriptores</th><th>Ingresos SG / mes</th><th>Tu ingreso estimado</th><th>Etapa</th>
+      </tr></thead>
+      <tbody>
+        {rows.map((r,i)=>(
+          <tr key={i} className={i===5?"sgn-hl":""}>
+            <td className="sgn-ts">{r.s}</td>
+            <td>{r.p}</td>
+            <td className="sgn-ti">~${Math.round(pools[i]*pct/100).toLocaleString()}/mes</td>
+            <td className="sgn-th">{r.hito}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};
+
+// ─── NIVEL DETALLE (Básica / Intermedia / Premium) ────────────────────────────
+function NivelDetalle({nivel, setPage}:{nivel:"basica"|"intermedia"|"premium", setPage:(p:any)=>void}) {
+
+  React.useEffect(()=>{
+    const style=document.createElement("style");
+    style.id="sgn-css";
+    if(!document.getElementById("sgn-css")) document.head.appendChild(style);
+    style.textContent=NIVEL_CSS;
+    const obs=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add("sgn-in");obs.unobserve(e.target);}});
+    },{threshold:.07});
+    setTimeout(()=>document.querySelectorAll(".sgn-reveal").forEach(el=>obs.observe(el)),100);
+    // Stagger grid items
+    const gObs=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          e.target.querySelectorAll(".sgn-item").forEach((item:any,i:number)=>{
+            item.style.opacity="0";item.style.transform="translateX(-10px)";
+            setTimeout(()=>{item.style.transition="opacity .5s cubic-bezier(.22,1,.36,1),transform .5s cubic-bezier(.22,1,.36,1)";item.style.opacity="1";item.style.transform="translateX(0)";},i*80);
+          });
+          gObs.unobserve(e.target);
+        }
+      });
+    },{threshold:.1});
+    setTimeout(()=>document.querySelectorAll(".sgn-grid").forEach(g=>gObs.observe(g)),100);
+    return ()=>{obs.disconnect();gObs.disconnect()};
+  },[]);
+
+  const data:{[k:string]:{badge:string,bc:string,bt:string,price:string,sub:string,rev:number,img:string,desc:string,incluye:[string,string][],fase1:string}} = {
+    basica:{
+      badge:"Nivel 1 · Básica · Pago único",
+      bc:"rgba(155,109,255,0.25)",bt:"#C4ADFF",
+      price:"$700",sub:"Pago único",rev:30,
+      img:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=90&fit=crop&crop=center",
+      desc:"El punto de partida para instructores que quieren publicar su conocimiento, obtener certificación oficial y comenzar a generar ingresos pasivos desde el primer día.",
       incluye:[
-        "Certificado digital oficial con QR verificable",
-        "Sesión estratégica 1:1 de 60 minutos con el equipo",
-        "1 experiencia publicada con al menos 1 técnica exclusiva",
-        "Foto de perfil retocada con filtro de marca Solo Gracias",
-        "Bio profesional redactada por el equipo",
-        "1 plantilla post + 1 story para Instagram",
-        "Video: grabás vos con tu celular — SG edita a estándar profesional",
+        ["Certificado digital oficial","Con código QR verificable — acreditable en redes sociales y CV profesional."],
+        ["Sesión estratégica 1:1 · 60 min","Con el equipo de Solo Gracias para definir posicionamiento y estructura de contenido."],
+        ["1 experiencia publicada","Al menos 1 técnica o metodología exclusiva. Vos grabás con tu celular — SG edita."],
+        ["Foto de perfil retocada","Con filtro y estética de marca Solo Gracias para coherencia visual en todas las redes."],
+        ["Bio profesional","Redactada por el equipo — tono premium, posicionamiento claro, optimizada para IG y LinkedIn."],
+        ["Kit de plantillas","1 plantilla post + 1 story diseñados para Instagram, alineados con la identidad visual."],
       ],
-      fase1:"30% del pool proporcional de suscriptores activos. Simple y predecible desde el día 1.",
-      fase2:"A partir del mes 7, se agrega bonus de performance según visualizaciones, completitud y reseñas de alumnos.",
+      fase1:"El 30% del pool mensual proporcional, distribuido en su totalidad desde el día 1 de publicación. Simple, transparente y calculable en tiempo real. Tu porcentaje nunca baja del 30%.",
     },
-    intermedia: {
-      badge:"Nivel 2 — Intermedia",
-      price:"$1.500 USD",
-      sub:"+ $497/mes · mín. 12 meses",
-      rev:"40%",
-      img:"https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1200&q=85&fit=crop&crop=top",
-      color:"rgba(201,168,76,0.3)",
-      textColor:"#C9A84C",
+    intermedia:{
+      badge:"Nivel 2 · Intermedia · + $497/mes",
+      bc:"rgba(201,168,76,0.25)",bt:"#C9A84C",
+      price:"$1.500",sub:"+ $497/mes · mín. 12 meses",rev:40,
+      img:"https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1600&q=90&fit=crop&crop=top",
       desc:"Para instructores que quieren presencia profesional completa en redes, más experiencias publicadas y un rebranding que los posicione como referentes en su área.",
       incluye:[
-        "Todo del Nivel Básica",
-        "Rebranding completo de Instagram: bio, 9 highlights, 12 plantillas post, 8 stories, guía de feed",
-        "Sesión 1:1 en vivo de 90 minutos",
-        "2 experiencias exclusivas publicadas",
-        "Video grabado Y editado por Solo Gracias — producción completa",
-        "Aparición en sección Expertos de sologracias.com",
-        "Participación en 1 evento online como ponente",
+        ["Todo del Nivel Básica incluido","Certificado, sesión 1:1, foto retocada, bio profesional y plantillas de Instagram."],
+        ["Rebranding completo Instagram","Bio · 9 highlights · 12 plantillas post · 8 stories · guía de feed completa."],
+        ["Sesión 1:1 en vivo · 90 min","En profundidad, para definir estrategia, posicionamiento y plan de contenido."],
+        ["2 experiencias exclusivas publicadas","Video grabado Y editado por Solo Gracias — producción completa incluida."],
+        ["Aparición en sección Expertos","Visibilidad en sologracias.com como instructor destacado de la plataforma."],
+        ["Ponente en evento online","Participación garantizada en 1 evento online con la comunidad de Solo Gracias."],
       ],
-      fase1:"40% del pool proporcional. A 1.000 suscriptores representa ~$3.996/mes antes del fee de gestión.",
-      fase2:"Bonus de performance desde el mes 7. Quien crea mejor contenido, gana más.",
+      fase1:"El 40% del pool mensual proporcional desde el primer día de publicación. Transparente y calculable. Tu porcentaje nunca baja del 40% — es el piso garantizado.",
     },
-    premium: {
-      badge:"Nivel 3 — Premium",
-      price:"$2.500 USD",
-      sub:"+ $497/mes · mín. 12 meses",
-      rev:"50%",
-      img:"https://images.unsplash.com/photo-1593811167562-9cef47bfc4d7?w=1200&q=85&fit=crop&crop=center",
-      color:"rgba(201,168,76,0.5)",
-      textColor:"#FFD966",
-      desc:"El nivel más completo. Para instructores que quieren el mayor impacto, la mayor visibilidad y el porcentaje de ingresos más alto de la plataforma.",
+    premium:{
+      badge:"Nivel 3 · Premium · + $497/mes",
+      bc:"rgba(201,168,76,0.4)",bt:"#FFD966",
+      price:"$2.500",sub:"+ $497/mes · mín. 12 meses",rev:50,
+      img:"https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=1600&q=90&fit=crop&crop=center",
+      desc:"El nivel más completo. Para instructores que quieren el mayor impacto, la mayor visibilidad y el porcentaje de ingresos más alto disponible en la plataforma.",
       incluye:[
-        "Todo del Nivel Intermedia",
-        "Rebranding de TODAS las redes: Instagram + LinkedIn + Facebook + TikTok",
-        "Plan de contenido personalizado de 90 días",
-        "Landing page personal: sologracias.com/instructores/[tu-nombre]",
-        "3 experiencias exclusivas grabadas y editadas por Solo Gracias",
-        "Mención en el newsletter mensual a toda la lista B2C",
-        "Título de Embajador Oficial · 8 posts + 16 stories/mes gestionados por SG",
+        ["Todo del Nivel Intermedia","Más todos los beneficios de Básica e Intermedia incluidos sin excepción."],
+        ["Rebranding TODAS las redes","Instagram + LinkedIn + Facebook + TikTok — coherencia visual completa."],
+        ["Plan de contenido 90 días","Personalizado por el equipo de Solo Gracias según tu área y audiencia."],
+        ["Landing page personal","sologracias.com/instructores/[tu-nombre] — tu espacio propio en la plataforma."],
+        ["3 experiencias exclusivas","Grabadas y editadas por Solo Gracias con producción completa."],
+        ["Embajador Oficial","8 posts + 16 stories por mes gestionados por SG · Mención en newsletter mensual."],
       ],
-      fase1:"50% del pool proporcional — el porcentaje más alto de la plataforma. A 1.000 suscriptores: ~$4.995/mes antes del fee.",
-      fase2:"Prioridad en amplificación de contenido y bonus de performance desde el mes 7.",
+      fase1:"El 50% del pool mensual proporcional — el máximo disponible en la plataforma — desde el primer día de publicación. Tu porcentaje nunca baja del 50%.",
     },
   };
 
   const d = data[nivel];
+  const nums = ["I","II","III","IV","V","VI"];
 
   return (
-    <div style={{background:"white",minHeight:"100vh",fontFamily:"system-ui,sans-serif"}}>
+    <div style={{background:"white",minHeight:"100vh",fontFamily:"'DM Sans',system-ui,sans-serif"}}>
+      <style>{NIVEL_CSS}</style>
 
-      {/* Hero con imagen */}
-      <div style={{position:"relative",height:"clamp(280px,40vw,420px)",overflow:"hidden"}}>
-        <img src={d.img} alt={d.badge} style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center"}}/>
-        <div style={{position:"absolute",inset:0,background:"linear-gradient(to right,rgba(10,4,24,0.88) 50%,rgba(10,4,24,0.3) 100%)"}}/>
-        <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",justifyContent:"center",padding:"clamp(24px,5vw,60px)"}}>
-          <button onClick={()=>setPage("academia-instructores")} style={{background:"none",border:"none",color:"rgba(255,255,255,0.5)",fontSize:12,cursor:"pointer",textAlign:"left",marginBottom:16,padding:0}}>← Volver a la Academia</button>
-          <span style={{fontSize:9,fontWeight:700,letterSpacing:"0.14em",textTransform:"uppercase" as const,padding:"4px 12px",borderRadius:50,display:"inline-block",width:"fit-content",marginBottom:12,background:d.color,color:d.textColor}}>{d.badge}</span>
-          <h1 style={{fontFamily:"Georgia,serif",fontSize:"clamp(32px,5vw,60px)",fontWeight:900,color:"white",lineHeight:1.05,marginBottom:8}}>{d.price} <span style={{fontSize:"clamp(13px,1.5vw,18px)",fontWeight:300,opacity:0.55}}>{d.sub}</span></h1>
-          <p style={{fontSize:"clamp(12px,1.5vw,16px)",color:"rgba(255,255,255,0.65)",maxWidth:520,lineHeight:1.5}}>{d.desc}</p>
-          <p style={{fontSize:"clamp(12px,1.4vw,15px)",fontWeight:700,color:G,marginTop:12}}>Revenue share: {d.rev} para el instructor</p>
+      <nav className="sgn-nav">
+        <button className="sgn-logo sgn-back" onClick={()=>setPage("academia-instructores")}>
+          <svg width="34" height="34" viewBox="0 0 72 72" fill="none">
+            <path d="M36 36 C36 33 34 31 31 31 C28 31 26 33 26 36 C26 40 29 43 33 44 C38 45 43 42 45 37 C47 31 44 24 39 21 C33 17 25 19 20 24 C14 30 14 39 18 46 C23 54 33 57 42 54 C52 50 58 40 56 30 C54 19 44 12 33 12 C21 12 11 20 9 32 C7 44 13 57 24 62 C36 68 51 65 59 54"
+              stroke="#3D1E7A" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <circle cx="36" cy="36" r="2.5" fill="#3D1E7A"/>
+          </svg>
+          <span className="sgn-logo-text">Solo Gracias</span>
+        </button>
+        <button className="sgn-back" onClick={()=>setPage("academia-instructores")}>← Academia</button>
+        <a href={`${WA_LINK.replace('Academia+Solo+Gracias','nivel+'+nivel)}`} target="_blank" rel="noopener noreferrer" className="sgn-cta">Postularme →</a>
+      </nav>
+
+      <section className="sgn-hero">
+        <img className="sgn-hero-img" src={d.img} alt=""/>
+        <div className="sgn-hero-grad"/>
+        <div className="sgn-hero-grad2"/>
+        <div className="sgn-hero-c">
+          <div className="sgn-badge"><div className="sgn-badge-dot"/>{d.badge}</div>
+          <h1 className="sgn-title">{d.price} <em className="sgn-title-gold">·</em><br/><span className="sgn-title-gold">{d.rev}%</span> tuyo</h1>
+          <p className="sgn-desc">{d.desc}</p>
+          <div className="sgn-meta">
+            <div><div className="sgn-mv"><span className="sgn-title-gold">{d.rev}%</span></div><div className="sgn-mk">Revenue share</div></div>
+            <div><div className="sgn-mv">{d.price}</div><div className="sgn-mk">{d.sub}</div></div>
+          </div>
         </div>
-      </div>
+      </section>
 
-      {/* Aviso selección */}
-      <div style={{background:"#FFF8E1",borderBottom:"1px solid rgba(201,168,76,0.3)",padding:"12px clamp(20px,5vw,60px)",display:"flex",alignItems:"center",gap:10}}>
-        <span style={{fontSize:16}}>⭐</span>
-        <p style={{fontSize:"clamp(11px,1.3vw,13px)",color:"#7B5800",fontWeight:500}}>Los instructores son seleccionados por el equipo de Solo Gracias. Al postularte, el equipo revisará tu perfil y se pondrá en contacto contigo.</p>
-      </div>
-
-      <div style={{maxWidth:860,margin:"0 auto",padding:"clamp(32px,5vw,56px) clamp(20px,4vw,40px)"}}>
-
-        {/* Lo que incluye */}
-        <h2 style={{fontFamily:"Georgia,serif",fontSize:"clamp(22px,3vw,32px)",fontWeight:700,color:V,marginBottom:20}}>¿Qué incluye este nivel?</h2>
-        <div style={{display:"flex",flexDirection:"column" as const,gap:10,marginBottom:48}}>
-          {d.incluye.map((item,i)=>(
-            <div key={i} style={{display:"flex",alignItems:"flex-start",gap:12,padding:"14px 18px",background:i%2===0?BG:"white",borderRadius:10,border:"1px solid rgba(155,109,255,0.1)"}}>
-              <span style={{color:G,fontWeight:700,fontSize:14,flexShrink:0,marginTop:1}}>✓</span>
-              <span style={{fontSize:"clamp(13px,1.5vw,15px)",color:"#333",lineHeight:1.5}}>{item}</span>
+      <div className="sgn-main">
+        <div className="sgn-reveal" style={{marginBottom:20}}>
+          <p className="sgn-lbl">Qué incluye</p>
+          <h2 className="sgn-tit">Todo lo que está incluido</h2>
+          <p className="sgn-sub">Cada elemento fue diseñado para que estés operando desde el primer día.</p>
+        </div>
+        <div className="sgn-grid sgn-reveal sgn-d1">
+          {d.incluye.map(([t,desc],i)=>(
+            <div key={i} className="sgn-item">
+              <div className="sgn-num">{nums[i]}</div>
+              <div><div className="sgn-it">{t}</div><div className="sgn-id">{desc}</div></div>
             </div>
           ))}
         </div>
 
-        {/* Modelo de ingresos */}
-        <h2 style={{fontFamily:"Georgia,serif",fontSize:"clamp(22px,3vw,32px)",fontWeight:700,color:V,marginBottom:8}}>Modelo de ingresos</h2>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16,marginBottom:16}}>
-          {[
-            {titulo:"Fase 1 — Primeros 6 meses",desc:d.fase1,bg:BG,border:"rgba(155,109,255,0.15)"},
-            {titulo:"Fase 2 — Post 6 meses",desc:d.fase2,bg:"#FFF8E1",border:"rgba(201,168,76,0.3)"},
-          ].map((fase,i)=>(
-            <div key={i} style={{background:fase.bg,borderRadius:12,padding:"18px 20px",border:`1px solid ${fase.border}`}}>
-              <p style={{fontSize:11,fontWeight:700,color:i===0?VM:"#7B5800",letterSpacing:"0.06em",textTransform:"uppercase" as const,marginBottom:6}}>{fase.titulo}</p>
-              <p style={{fontSize:"clamp(12px,1.4vw,14px)",color:"#444",lineHeight:1.6}}>{fase.desc}</p>
-            </div>
-          ))}
+        <div className="sgn-reveal">
+          <p className="sgn-lbl">Modelo de ingresos</p>
+          <h2 className="sgn-tit">Modelo de ingresos</h2>
+          <p className="sgn-sub">Calculable desde el día 1. Sin letra chica. Tu porcentaje del pool es fijo según tu nivel.</p>
+        </div>
+        <div className="sgn-phase sgn-reveal sgn-d1">
+          <div className="sgn-ptag">Fase 1 — Primeros 6 meses</div>
+          <div className="sgn-ptit">Pool proporcional de suscriptores</div>
+          <div className="sgn-pdesc">{d.fase1}</div>
         </div>
 
-        {tablaIngresos(parseInt(d.rev))}
+        <div className="sgn-reveal sgn-d2">
+          <p className="sgn-tbl-lbl">Proyección mensual · {d.rev}% revenue share</p>
+          <SgnTablaIngresos pct={d.rev}/>
+          <p className="sgn-tnote">* Proyección estimada sobre el pool proporcional total. Los valores dependen del número de instructores activos en la plataforma.</p>
+        </div>
 
-        {/* CTA */}
-        <div style={{marginTop:48,textAlign:"center" as const,padding:"40px 24px",background:BG,borderRadius:16,border:"1px solid rgba(155,109,255,0.15)"}}>
-          <p style={{fontSize:11,fontWeight:600,color:VM,letterSpacing:"0.08em",textTransform:"uppercase" as const,marginBottom:8}}>¿Listo para empezar?</p>
-          <h3 style={{fontFamily:"Georgia,serif",fontSize:"clamp(20px,3vw,30px)",fontWeight:700,color:V,marginBottom:8}}>Los instructores son seleccionados.</h3>
-          <p style={{fontSize:"clamp(12px,1.4vw,14px)",color:T2,marginBottom:24,maxWidth:480,margin:"0 auto 24px"}}>Escribinos por WhatsApp y el equipo de Solo Gracias revisará tu perfil. Sin compromiso.</p>
-          <a href={WA_LINK} target="_blank" rel="noopener noreferrer"
-            style={{display:"inline-flex",alignItems:"center",gap:10,background:"#25D366",color:"white",padding:"16px 36px",borderRadius:50,fontWeight:700,fontSize:"clamp(13px,1.5vw,15px)",textDecoration:"none",transition:"opacity 0.2s"}}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-            Postularme por WhatsApp
-          </a>
+        <div className="sgn-cta sgn-reveal">
+          <div className="sgn-cta-inner">
+            <div className="sgn-cta-ey">Postulaciones abiertas</div>
+            <h2 className="sgn-cta-tit">Los instructores son<br/>seleccionados.</h2>
+            <p className="sgn-cta-desc">El equipo de Solo Gracias revisa cada perfil y se pone en contacto directamente. Hacé clic en "Postularme" en la barra superior para comenzar.</p>
+            <div className="sgn-cta-div"/>
+            <p className="sgn-cta-note">Solo Gracias selecciona instructores que comparten los valores de la plataforma.</p>
+          </div>
         </div>
       </div>
+
+      <footer className="sgn-footer">
+        <span className="sgn-fc">© 2026 Solo Gracias · sologracias.com</span>
+        <div className="sgn-fl"><a href="#">Privacidad</a><a href="#">Términos</a></div>
+      </footer>
     </div>
   );
 }
 
 // ─── NIVEL FUNDADOR ───────────────────────────────────────────────────────────
 function NivelFundador({setPage}:{setPage:(p:any)=>void}) {
-  const V="#3D1E7A", VM="#6B21A8", G="#C9A84C", T2="#6B5F82", BG="#F9F7FF";
+
+  React.useEffect(()=>{
+    const style=document.createElement("style");
+    style.id="sgn-css-fund";
+    if(!document.getElementById("sgn-css-fund")) document.head.appendChild(style);
+    style.textContent=NIVEL_CSS;
+    // Particles
+    const container=document.getElementById("sgn-fund-particles");
+    if(container && container.childElementCount===0){
+      const ps=document.createElement("style");
+      ps.textContent=`.sgn-part{position:absolute;background:#C9A84C;border-radius:50%;animation:sgFundPart linear infinite}`;
+      document.head.appendChild(ps);
+      for(let i=0;i<20;i++){
+        const p=document.createElement("div");
+        p.className="sgn-part";
+        const sz=1+Math.random()*2.5;
+        p.style.cssText=`left:${Math.random()*100}%;bottom:${Math.random()*40}%;width:${sz}px;height:${sz}px;animation-duration:${5+Math.random()*9}s;animation-delay:${Math.random()*7}s;opacity:${.25+Math.random()*.45}`;
+        container.appendChild(p);
+      }
+    }
+    // Scroll reveals
+    const obs=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add("sgn-in");obs.unobserve(e.target);}});
+    },{threshold:.07});
+    setTimeout(()=>document.querySelectorAll(".sgn-reveal").forEach(el=>obs.observe(el)),100);
+    // Stagger benefits
+    const bObs=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          e.target.querySelectorAll(".sgn-ben").forEach((b:any,i:number)=>{
+            b.style.opacity="0";b.style.transform="translateX(-14px)";
+            setTimeout(()=>{b.style.transition="opacity .5s cubic-bezier(.22,1,.36,1),transform .5s cubic-bezier(.22,1,.36,1)";b.style.opacity="1";b.style.transform="translateX(0)";},i*70);
+          });
+          bObs.unobserve(e.target);
+        }
+      });
+    },{threshold:.05});
+    // Stagger why grid
+    const wObs=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          e.target.querySelectorAll(".sgn-why-item").forEach((item:any,i:number)=>{
+            item.style.opacity="0";item.style.transform="translateY(20px)";
+            setTimeout(()=>{item.style.transition="opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1)";item.style.opacity="1";item.style.transform="translateY(0)";},i*100);
+          });
+          wObs.unobserve(e.target);
+        }
+      });
+    },{threshold:.1});
+    setTimeout(()=>{
+      const benSection=document.querySelector(".sgn-ben-section");
+      const whyGrid=document.querySelector(".sgn-why");
+      if(benSection) bObs.observe(benSection);
+      if(whyGrid) wObs.observe(whyGrid);
+    },100);
+    return ()=>{obs.disconnect();bObs.disconnect();wObs.disconnect()};
+  },[]);
 
   const beneficios = [
-    {titulo:"Número permanente #001 al #011",desc:"Irrepetible en la historia de la plataforma. Cuando haya 500 instructores, ser el #003 es algo que nadie más puede tener. Tu número aparece en tu perfil, materiales y comunicaciones para siempre."},
-    {titulo:"Producción cinematográfica 4K",desc:"Estudio profesional · Cámara 4K · Iluminación de 3 puntos · Styling y fondo con identidad de marca · Mínimo 10 episodios de 15-25 min cada uno."},
-    {titulo:"Post-producción estilo Gaia",desc:"Motion graphics animados · Color grading cinematográfico · Música licenciada · Efectos visuales premium · Intro/outro con logo animado · Subtítulos en ES, EN y PT."},
-    {titulo:"Workbooks diseñados",desc:"PDFs descargables por episodio con identidad visual del instructor + Solo Gracias. Contenido que acompaña cada episodio."},
-    {titulo:"Summit de Lanzamiento",desc:"Evento online de 1 día con los 11 Fundadores · Producción en vivo con gráficos · 5.000-20.000 personas en directo · Grabado como contenido evergreen en la plataforma."},
-    {titulo:"Salida a la prensa",desc:"Comunicado oficial distribuido a medios de Paraguay, Argentina, Colombia y México · Pitch a TV, radio y medios digitales · Kit de prensa personal completo."},
-    {titulo:"Pauta pagada 6 meses",desc:"Ads en Instagram y TikTok gestionados y pagados por Solo Gracias · Targeting específico a audiencia LATAM bienestar · Desde el día 1 de publicación."},
-    {titulo:"Prioridad absoluta en redes",desc:"Siempre primeros en el slot semanal de amplificación. Nunca esperan turno. Prioridad en toda la comunicación de Solo Gracias."},
-    {titulo:"Consejero de la plataforma",desc:"Voz real en las decisiones importantes. Consultados antes de cambios. Reunión directa con el equipo fundador mensual."},
-    {titulo:"Revenue share: 50%",desc:"El porcentaje más alto disponible en la plataforma. Igual que el nivel Premium pero con todos los beneficios adicionales exclusivos del Fundador."},
+    {n:"I",   t:"Número permanente #001 al #011",d:"Irrepetible en la historia de la plataforma. Cuando haya 500 instructores, ser el #003 es algo que nadie más puede tener. Tu número aparece en tu perfil y materiales para siempre."},
+    {n:"II",  t:"Producción cinematográfica 4K",d:"Estudio profesional · Cámara 4K · Iluminación de 3 puntos · Styling y fondo con identidad de marca · Mínimo 10 episodios de 15-25 min."},
+    {n:"III", t:"Post-producción estilo Gaia",d:"Motion graphics animados · Color grading cinematográfico · Música licenciada · Efectos visuales premium · Subtítulos en ES, EN y PT."},
+    {n:"IV",  t:"Workbooks diseñados",d:"PDFs descargables por episodio con identidad visual del instructor + Solo Gracias."},
+    {n:"V",   t:"Summit de Lanzamiento",d:"Evento online de 1 día · 11 ponentes · 5.000-20.000 personas en directo · Grabado como evergreen en la plataforma."},
+    {n:"VI",  t:"Salida a la prensa",d:"Comunicado oficial en medios de PY, AR, CO y MX · Pitch a TV, radio y digitales · Kit de prensa personal completo."},
+    {n:"VII", t:"Pauta pagada 6 meses",d:"Ads en Instagram y TikTok gestionados y pagados por Solo Gracias · Targeting a audiencia LATAM bienestar."},
+    {n:"VIII",t:"Consejero de la plataforma",d:"Voz real en las decisiones importantes. Consultados antes de cambios. Reunión directa mensual con el equipo fundador."},
+    {n:"IX",  t:"Revenue share: 50%",d:"El porcentaje más alto disponible en la plataforma, con todos los beneficios exclusivos del Fundador incluidos."},
   ];
 
   return (
-    <div style={{background:"white",minHeight:"100vh",fontFamily:"system-ui,sans-serif"}}>
+    <div className="sgn-dark" style={{fontFamily:"'DM Sans',system-ui,sans-serif"}}>
+      <style>{NIVEL_CSS}</style>
 
-      {/* Hero */}
-      <div style={{position:"relative",height:"clamp(300px,45vw,480px)",overflow:"hidden"}}>
-        <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=1400&q=85&fit=crop&crop=center" alt="Instructor Fundador" style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center"}}/>
-        <div style={{position:"absolute",inset:0,background:"linear-gradient(to right,rgba(10,4,24,0.92) 55%,rgba(10,4,24,0.4) 100%)"}}/>
-        <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",justifyContent:"center",padding:"clamp(24px,5vw,60px)"}}>
-          <button onClick={()=>setPage("academia-instructores")} style={{background:"none",border:"none",color:"rgba(255,255,255,0.5)",fontSize:12,cursor:"pointer",textAlign:"left",marginBottom:16,padding:0}}>← Volver a la Academia</button>
-          <span style={{fontSize:9,fontWeight:700,letterSpacing:"0.14em",textTransform:"uppercase" as const,padding:"4px 12px",borderRadius:50,display:"inline-block",width:"fit-content",marginBottom:12,background:"rgba(201,168,76,0.4)",color:"#FFD966"}}>Cupo exclusivo · Solo 11 lugares en la historia</span>
-          <h1 style={{fontFamily:"Georgia,serif",fontSize:"clamp(36px,5.5vw,68px)",fontWeight:900,color:"white",lineHeight:1.0,marginBottom:12}}>Instructor Fundador</h1>
-          <p style={{fontFamily:"Georgia,serif",fontSize:"clamp(14px,2vw,22px)",color:G,fontStyle:"italic",marginBottom:12}}>#001 — #011 · Para siempre.</p>
-          <p style={{fontSize:"clamp(12px,1.5vw,16px)",color:"rgba(255,255,255,0.65)",maxWidth:540,lineHeight:1.6}}>Los primeros 11 instructores de Solo Gracias no son clientes — son co-constructores de la plataforma y tienen un lugar en la historia que nadie más podrá tener.</p>
-        </div>
-      </div>
+      <nav className="sgn-nav sgn-dark">
+        <button className="sgn-logo sgn-back" onClick={()=>setPage("academia-instructores")}>
+          <svg width="34" height="34" viewBox="0 0 72 72" fill="none">
+            <path d="M36 36 C36 33 34 31 31 31 C28 31 26 33 26 36 C26 40 29 43 33 44 C38 45 43 42 45 37 C47 31 44 24 39 21 C33 17 25 19 20 24 C14 30 14 39 18 46 C23 54 33 57 42 54 C52 50 58 40 56 30 C54 19 44 12 33 12 C21 12 11 20 9 32 C7 44 13 57 24 62 C36 68 51 65 59 54"
+              stroke="#C9A84C" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <circle cx="36" cy="36" r="2.5" fill="#C9A84C"/>
+          </svg>
+          <span className="sgn-logo-text">Solo Gracias</span>
+        </button>
+        <button className="sgn-back" onClick={()=>setPage("academia-instructores")}>← Academia</button>
+        <a href={`${WA_LINK.replace('Academia+Solo+Gracias','Instructor+Fundador')}`} target="_blank" rel="noopener noreferrer" className="sgn-cta sgn-dark">Postularme →</a>
+      </nav>
 
-      {/* Aviso selección */}
-      <div style={{background:"#1A0838",padding:"16px clamp(20px,5vw,60px)",display:"flex",alignItems:"center",gap:12}}>
-        <span style={{color:G,fontSize:18,flexShrink:0}}>⭐</span>
-        <p style={{fontSize:"clamp(11px,1.3vw,14px)",color:"rgba(255,255,255,0.8)",fontWeight:500}}>
-          <strong style={{color:G}}>Los instructores son seleccionados por el equipo de Solo Gracias.</strong> Las vacantes de Instructor Fundador son solo 11 — para siempre. Al postularte, el equipo revisará tu perfil y se pondrá en contacto contigo.
-        </p>
-      </div>
-
-      <div style={{maxWidth:860,margin:"0 auto",padding:"clamp(32px,5vw,56px) clamp(20px,4vw,40px)"}}>
-
-        {/* Por qué ser Fundador */}
-        <div style={{textAlign:"center" as const,marginBottom:48}}>
-          <h2 style={{fontFamily:"Georgia,serif",fontSize:"clamp(24px,3.5vw,38px)",fontWeight:700,color:V,marginBottom:12}}>¿Por qué ser Instructor Fundador?</h2>
-          <p style={{fontSize:"clamp(13px,1.5vw,16px)",color:T2,maxWidth:620,margin:"0 auto",lineHeight:1.7}}>
-            Cuando Solo Gracias tenga millones de usuarios en toda Latinoamérica, tu nombre y tu número van a estar ahí — desde el primer día. No es un nivel más. Es ser parte de la historia.
-          </p>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:16,marginTop:32}}>
-            {[
-              {n:"11",label:"Lugares totales en la historia"},
-              {n:"50%","label":"Revenue share — el máximo"},
-              {n:"∞","label":"Legado permanente"},
-            ].map((s,i)=>(
-              <div key={i} style={{background:BG,borderRadius:12,padding:"20px 16px",border:"1px solid rgba(155,109,255,0.15)"}}>
-                <p style={{fontFamily:"Georgia,serif",fontSize:"clamp(28px,4vw,44px)",fontWeight:700,color:VM,lineHeight:1}}>{s.n}</p>
-                <p style={{fontSize:"clamp(10px,1.2vw,12px)",color:T2,marginTop:4,letterSpacing:"0.04em"}}>{s.label}</p>
-              </div>
-            ))}
+      <section className="sgn-hero">
+        <img className="sgn-hero-img" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1600&q=90&fit=crop&crop=top" alt="" style={{filter:"brightness(.55) saturate(.9)"}}/>
+        <div className="sgn-hero-grad"/>
+        <div className="sgn-hero-grad2"/>
+        <div id="sgn-fund-particles" style={{position:"absolute",inset:0,pointerEvents:"none",overflow:"hidden",zIndex:1}}/>
+        <div className="sgn-fund-num">11</div>
+        <div className="sgn-hero-c">
+          <div className="sgn-fund-eyebrow">Cupo exclusivo · Solo 11 lugares en la historia</div>
+          <h1 className="sgn-title">Instructor<br/>Fundador</h1>
+          <p className="sgn-fund-sub">#001 — #011 · Para siempre</p>
+          <p className="sgn-desc">Los primeros 11 instructores de Solo Gracias son co-constructores de la plataforma. Su número, su historia y su legado son irrepetibles.</p>
+          <div className="sgn-meta">
+            <div><div className="sgn-mv">11</div><div className="sgn-mk">Lugares totales</div></div>
+            <div><div className="sgn-mv" style={{color:"#C9A84C"}}>50%</div><div className="sgn-mk">Revenue share</div></div>
+            <div><div className="sgn-mv">4K</div><div className="sgn-mk">Producción</div></div>
           </div>
         </div>
+      </section>
 
-        {/* Beneficios */}
-        <h2 style={{fontFamily:"Georgia,serif",fontSize:"clamp(22px,3vw,32px)",fontWeight:700,color:V,marginBottom:20}}>Todos los beneficios incluidos</h2>
-        <div style={{display:"flex",flexDirection:"column" as const,gap:10,marginBottom:48}}>
-          {beneficios.map((b,i)=>(
-            <div key={i} style={{display:"flex",alignItems:"flex-start",gap:14,padding:"16px 20px",background:i%2===0?BG:"white",borderRadius:10,border:"1px solid rgba(155,109,255,0.1)"}}>
-              <span style={{color:G,fontWeight:700,fontSize:16,flexShrink:0,marginTop:2}}>✦</span>
-              <div>
-                <p style={{fontSize:"clamp(13px,1.5vw,15px)",fontWeight:700,color:V,marginBottom:3}}>{b.titulo}</p>
-                <p style={{fontSize:"clamp(11px,1.3vw,13px)",color:T2,lineHeight:1.6}}>{b.desc}</p>
-              </div>
+      <div className="sgn-stats sgn-reveal">
+        <div className="sgn-stat"><div className="sgn-sval">11</div><div className="sgn-skey">Lugares en la historia</div></div>
+        <div className="sgn-stat"><div className="sgn-sval" style={{color:"#C9A84C"}}>50%</div><div className="sgn-skey">Revenue share — el máximo</div></div>
+        <div className="sgn-stat"><div className="sgn-sval">∞</div><div className="sgn-skey">Legado permanente</div></div>
+      </div>
+
+      <div style={{maxWidth:1000,margin:"0 auto",padding:"0 clamp(20px,4vw,40px)"}}>
+
+        <div className="sgn-reveal" style={{marginBottom:48,textAlign:"center" as const}}>
+          <p className="sgn-lbl">Por qué ser fundador</p>
+          <h2 className="sgn-tit">No es un nivel más.<br/>Es ser parte de la historia.</h2>
+          <p className="sgn-sub">Cuando Solo Gracias tenga millones de usuarios en toda Latinoamérica, tu nombre y tu número van a estar ahí — desde el primer día.</p>
+        </div>
+
+        <div className="sgn-why sgn-reveal sgn-d1">
+          <div className="sgn-why-item"><div className="sgn-wn">01</div><h3 className="sgn-wt">Número permanente</h3><p className="sgn-wd">Del #001 al #011. Irrepetible. Cuando haya 500 instructores, ser el #003 es algo que nadie más podrá tener.</p></div>
+          <div className="sgn-why-item"><div className="sgn-wn">02</div><h3 className="sgn-wt">Consejero de la plataforma</h3><p className="sgn-wd">Voz real en las decisiones importantes. Consultados antes de cambios. Reunión directa mensual con el equipo fundador.</p></div>
+          <div className="sgn-why-item"><div className="sgn-wn">03</div><h3 className="sgn-wt">Estándar de calidad</h3><p className="sgn-wd">Tu contenido es el contenido ancla que define el nivel. Los que lleguen después van a aspirar a lo que vos construiste primero.</p></div>
+          <div className="sgn-why-item"><div className="sgn-wn">04</div><h3 className="sgn-wt">Legado digital</h3><p className="sgn-wd">Lo que sabés no te pertenece solo a vos — le pertenece a los que vienen. Solo Gracias es el lugar donde ese conocimiento queda registrado para siempre.</p></div>
+        </div>
+
+        <div className="sgn-reveal">
+          <p className="sgn-lbl">Beneficios incluidos</p>
+          <h2 className="sgn-tit">Todo lo que reciben<br/>los 11 Fundadores</h2>
+        </div>
+        <div className="sgn-ben-section sgn-reveal sgn-d1" style={{marginBottom:88}}>
+          {beneficios.map((b)=>(
+            <div key={b.n} className="sgn-ben">
+              <div className="sgn-bicon">{b.n}</div>
+              <div><div className="sgn-bt">{b.t}</div><div className="sgn-bd">{b.desc}</div></div>
             </div>
           ))}
         </div>
 
-        {/* Tabla de ingresos */}
-        {tablaIngresos(50)}
+        <div className="sgn-reveal">
+          <p className="sgn-lbl">Proyección de ingresos</p>
+          <h2 className="sgn-tit" style={{fontSize:"clamp(24px,3.5vw,36px)",marginBottom:24}}>50% revenue share · Ingresos mensuales estimados</h2>
+        </div>
+        <div className="sgn-reveal sgn-d1" style={{marginBottom:88}}>
+          <SgnTablaIngresos pct={50}/>
+          <p className="sgn-tnote">* Proyección estimada sobre el pool proporcional total.</p>
+        </div>
 
-        {/* Precio y CTA */}
-        <div style={{marginTop:56,background:"#0F0820",borderRadius:20,padding:"clamp(28px,4vw,48px)",textAlign:"center" as const}}>
-          <p style={{fontSize:11,fontWeight:700,color:G,letterSpacing:"0.12em",textTransform:"uppercase" as const,marginBottom:12}}>Inversión para ser Instructor Fundador</p>
-          <p style={{fontFamily:"Georgia,serif",fontSize:"clamp(36px,5vw,60px)",fontWeight:900,color:"white",lineHeight:1}}>$3.500 USD</p>
-          <p style={{fontSize:"clamp(13px,1.5vw,16px)",color:"rgba(255,255,255,0.5)",marginTop:4,marginBottom:8}}>Pago único de ingreso</p>
-          <p style={{fontFamily:"Georgia,serif",fontSize:"clamp(18px,2.5vw,28px)",fontWeight:700,color:G}}>+ $997/mes</p>
-          <p style={{fontSize:"clamp(11px,1.3vw,14px)",color:"rgba(255,255,255,0.4)",marginBottom:32}}>Gestión mensual continua</p>
-
-          <div style={{background:"rgba(201,168,76,0.1)",borderRadius:12,padding:"16px 20px",marginBottom:32,border:"1px solid rgba(201,168,76,0.25)"}}>
-            <p style={{fontSize:"clamp(11px,1.3vw,13px)",color:G,lineHeight:1.6}}>
-              <strong>Solo 11 lugares · Para siempre.</strong> Los instructores son seleccionados por el equipo de Solo Gracias. Al postularte, revisaremos tu perfil y nos pondremos en contacto contigo.
-            </p>
+        <div className="sgn-price-card sgn-reveal">
+          <div className="sgn-price-top">
+            <div className="sgn-pcupo"><div className="sgn-pdot"/><span>Solo 11 lugares · Para siempre</span><div className="sgn-pdot"/></div>
+            <p style={{fontSize:11,color:"rgba(255,255,255,.2)",letterSpacing:".1em",textTransform:"uppercase" as const,marginBottom:24}}>Inversión para ser Instructor Fundador</p>
+            <div className="sgn-pamount">$3.500 <em>USD</em></div>
+            <div className="sgn-psub">Pago único de ingreso</div>
+            <div className="sgn-pmonthly">+ $997 / mes</div>
+            <div className="sgn-pmonthlysub">Gestión mensual continua</div>
+            <div className="sgn-pnote">Los instructores son seleccionados por el equipo de Solo Gracias. Al postularte, revisaremos tu perfil y nos pondremos en contacto contigo.</div>
+            <p className="sgn-pcta">Hacé clic en <strong>Postularme →</strong> en la barra superior<br/>para iniciar el proceso de selección.</p>
           </div>
-
-          <a href={WA_LINK} target="_blank" rel="noopener noreferrer"
-            style={{display:"inline-flex",alignItems:"center",gap:12,background:"#25D366",color:"white",padding:"18px 44px",borderRadius:50,fontWeight:700,fontSize:"clamp(14px,1.6vw,17px)",textDecoration:"none"}}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-            Postularme por WhatsApp
-          </a>
         </div>
 
       </div>
+
+      <footer className="sgn-footer sgn-dark" style={{marginTop:80}}>
+        <span className="sgn-fc">© 2026 Solo Gracias · sologracias.com</span>
+        <div className="sgn-fl"><a href="#">Privacidad</a><a href="#">Términos</a></div>
+      </footer>
     </div>
   );
 }
