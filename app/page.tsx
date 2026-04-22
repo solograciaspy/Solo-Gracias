@@ -4183,7 +4183,7 @@ export default function App() {
 
   const [page, setPage] = useState<"home"|"membresia"|"pago"|"academia"|"academia-instructores"|"onboarding"|"comunidad"|"gamificacion"|"experiencia"|"neurociencia"|"registro-programas"|"programas-gratuitos"|"nivel-basica"|"nivel-intermedia"|"nivel-premium"|"nivel-fundador">("home");
 
-  useEffect(() => { window.scrollTo(0, 0); }, [page]);
+  useEffect(() => { window.scrollTo(0, 0); document.body.dataset.page = page; }, [page]);
 
   const [experienciaActual, setExperienciaActual] = useState<string>("meditacion");
   const { user, loading: userLoading, signOut } = useUser();
@@ -4194,7 +4194,7 @@ export default function App() {
   useEffect(() => {
     if (page !== "home") return;
     const t = setTimeout(() => {
-      setShowPromoModal(true);
+      if(document.body.dataset.page==="home") setShowPromoModal(true);
     }, 3000);
     return () => clearTimeout(t);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
