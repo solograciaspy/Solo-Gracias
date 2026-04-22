@@ -4801,7 +4801,7 @@ const NIVEL_CSS = `
 
 .sgn-nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;background:rgba(255,255,255,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(61,30,122,.07);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(24px,5vw,60px)}
 .sgn-logo{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer;background:none;border:none}
-.sgn-logo-text{font-family:Georgia,serif;color:#3D1E7A;font-size:17px;font-weight:300;letter-spacing:.14em;text-transform:uppercase}
+.sgn-logo-text{font-family:Georgia,serif;color:#3D1E7A;font-size:17px;font-weight:300;letter-spacing:.14em;text-transform:uppercase}@media(max-width:480px){.sgn-logo-text{display:none}.sgn-cta{padding:8px 14px;font-size:11px}.sgn-back{font-size:11px}}
 .sgn-back{font-size:13px;color:#5E4A8A;background:none;border:none;cursor:pointer;transition:color .2s}
 .sgn-back:hover{color:#6B21A8}
 .sgn-cta{padding:10px 24px;background:#6B21A8;color:white;border-radius:50px;font-size:13px;font-weight:500;border:none;cursor:pointer;transition:all .2s;text-decoration:none}
@@ -5078,15 +5078,6 @@ function NivelDetalle({nivel, setPage}:{nivel:"basica"|"intermedia"|"premium", s
         <a href={`${WA_LINK.replace('Academia+Solo+Gracias','nivel+'+nivel)}`} target="_blank" rel="noopener noreferrer" className="sgn-cta">Postularme →</a>
       </nav>
 
-      <div style={{height:56,background:"rgba(10,4,20,.95)",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 clamp(16px,3vw,32px)",position:"relative",zIndex:100,borderBottom:"1px solid rgba(201,168,76,.08)"}}>
-        <button onClick={()=>setPage("academia-instructores")} style={{display:"flex",alignItems:"center",gap:10,background:"none",border:"none",cursor:"pointer"}}>
-          <svg width="32" height="32" viewBox="0 0 72 72" fill="none"><path d="M36 36 C36 33 34 31 31 31 C28 31 26 33 26 36 C26 40 29 43 33 44 C38 45 43 42 45 37 C47 31 44 24 39 21 C33 17 25 19 20 24 C14 30 14 39 18 46 C23 54 33 57 42 54 C52 50 58 40 56 30 C54 19 44 12 33 12 C21 12 11 20 9 32 C7 44 13 57 24 62 C36 68 51 65 59 54" stroke="#C9A84C" strokeWidth="2.5" strokeLinecap="round"/><circle cx="36" cy="36" r="2.5" fill="#C9A84C"/></svg>
-          <span style={{fontFamily:"Georgia,serif",color:"#E8C96A",fontSize:15,fontWeight:300,letterSpacing:"0.14em"}}>SOLO GRACIAS</span>
-        </button>
-        <button onClick={()=>setPage("academia-instructores")} style={{fontSize:13,color:"rgba(255,255,255,.45)",background:"none",border:"none",cursor:"pointer"}}>← Academia</button>
-        <a href={WA_LINK} target="_blank" rel="noopener noreferrer" style={{padding:"9px 22px",background:"#C9A84C",color:"#0A0414",borderRadius:50,fontSize:13,fontWeight:600,textDecoration:"none"}}>Postularme →</a>
-      </div>
-
       <section className="sgn-hero">
         <img className="sgn-hero-img" src={d.img} alt=""/>
         <div className="sgn-hero-grad"/>
@@ -5227,7 +5218,7 @@ function NivelFundador({setPage}:{setPage:(p:any)=>void}) {
   ];
 
   return (
-    <div className="sgn-dark" style={{fontFamily:"'DM Sans',system-ui,sans-serif"}}>
+    <div className="sgn-dark" style={{fontFamily:"'DM Sans',system-ui,sans-serif",minHeight:"unset"}}>
       <style>{NIVEL_CSS}</style>
 
 
@@ -5242,15 +5233,6 @@ function NivelFundador({setPage}:{setPage:(p:any)=>void}) {
 
 
 
-
-      <div style={{height:56,background:"rgba(10,4,20,.95)",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 clamp(16px,3vw,32px)",position:"relative",zIndex:100,borderBottom:"1px solid rgba(201,168,76,.08)"}}>
-        <button onClick={()=>setPage("academia-instructores")} style={{display:"flex",alignItems:"center",gap:10,background:"none",border:"none",cursor:"pointer"}}>
-          <svg width="32" height="32" viewBox="0 0 72 72" fill="none"><path d="M36 36 C36 33 34 31 31 31 C28 31 26 33 26 36 C26 40 29 43 33 44 C38 45 43 42 45 37 C47 31 44 24 39 21 C33 17 25 19 20 24 C14 30 14 39 18 46 C23 54 33 57 42 54 C52 50 58 40 56 30 C54 19 44 12 33 12 C21 12 11 20 9 32 C7 44 13 57 24 62 C36 68 51 65 59 54" stroke="#C9A84C" strokeWidth="2.5" strokeLinecap="round"/><circle cx="36" cy="36" r="2.5" fill="#C9A84C"/></svg>
-          <span style={{fontFamily:"Georgia,serif",color:"#E8C96A",fontSize:15,fontWeight:300,letterSpacing:"0.14em"}}>SOLO GRACIAS</span>
-        </button>
-        <button onClick={()=>setPage("academia-instructores")} style={{fontSize:13,color:"rgba(255,255,255,.45)",background:"none",border:"none",cursor:"pointer"}}>← Academia</button>
-        <a href={WA_LINK} target="_blank" rel="noopener noreferrer" style={{padding:"9px 22px",background:"#C9A84C",color:"#0A0414",borderRadius:50,fontSize:13,fontWeight:600,textDecoration:"none"}}>Postularme →</a>
-      </div>
 
       <section className="sgn-hero">
         <img className="sgn-hero-img" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1600&q=90&fit=crop&crop=faces" alt="" style={{filter:"brightness(.55) saturate(.9)"}}/>
