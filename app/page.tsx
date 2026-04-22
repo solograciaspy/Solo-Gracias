@@ -4801,13 +4801,13 @@ const NIVEL_CSS = `
 
 .sgn-nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;background:rgba(255,255,255,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(61,30,122,.07);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(24px,5vw,60px)}
 .sgn-logo{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer;background:none;border:none}
-.sgn-logo-text{font-family:Georgia,serif;color:#3D1E7A;font-size:17px;font-weight:300;letter-spacing:.14em;text-transform:uppercase}@media(max-width:480px){.sgn-logo-text{display:none}.sgn-cta{padding:8px 14px;font-size:11px}.sgn-back{font-size:11px}}
+.sgn-logo-text{font-family:Georgia,serif;color:#3D1E7A;font-size:17px;font-weight:300;letter-spacing:.14em;text-transform:uppercase}@media(max-width:600px){.sgn-logo-text{display:none!important}.sgn-cta{padding:7px 12px!important;font-size:11px!important}.sgn-back{font-size:11px!important}.sgn-nav{padding:0 12px!important}}
 .sgn-back{font-size:13px;color:#5E4A8A;background:none;border:none;cursor:pointer;transition:color .2s}
 .sgn-back:hover{color:#6B21A8}
 .sgn-cta{padding:10px 24px;background:#6B21A8;color:white;border-radius:50px;font-size:13px;font-weight:500;border:none;cursor:pointer;transition:all .2s;text-decoration:none}
 .sgn-cta:hover{background:#3D1E7A;transform:translateY(-1px)}
 
-.sgn-hero{margin-top:64px;position:relative;height:calc(100vh - 64px);min-height:520px;max-height:760px;overflow:hidden;display:flex;align-items:flex-end}
+.sgn-hero{margin-top:0;position:relative;height:100vh;min-height:520px;max-height:820px;overflow:hidden;display:flex;align-items:flex-end}
 .sgn-hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;animation:sgNivImgZoom 12s ease-out both}
 .sgn-hero-grad{position:absolute;inset:0;background:linear-gradient(115deg,rgba(10,4,20,.88) 0%,rgba(61,30,122,.5) 55%,rgba(10,4,20,.2) 100%)}
 .sgn-hero-grad2{position:absolute;bottom:0;left:0;right:0;height:40%;background:linear-gradient(to top,rgba(10,4,20,.7),transparent)}
@@ -4877,7 +4877,7 @@ const NIVEL_CSS = `
 .sgn-fl a:hover{color:#6B21A8}
 
 /* FUNDADOR DARK THEME */
-.sgn-dark{background:#0A0414;color:white;min-height:100vh}
+.sgn-dark{background:#0A0414;color:white}
 @keyframes sgFundNum{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes sgFundPart{0%{transform:translateY(0) translateX(0);opacity:0}15%{opacity:.8}90%{opacity:.3}100%{transform:translateY(-130px) translateX(30px);opacity:0}}
 @keyframes sgFundBorder{0%,100%{border-color:rgba(201,168,76,.15)}50%{border-color:rgba(201,168,76,.4)}}
