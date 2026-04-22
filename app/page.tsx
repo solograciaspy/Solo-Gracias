@@ -5062,7 +5062,7 @@ function NivelDetalle({nivel, setPage}:{nivel:"basica"|"intermedia"|"premium", s
   const nums = ["I","II","III","IV","V","VI"];
 
   return (
-    <div style={{background:"white",minHeight:"100vh",fontFamily:"'DM Sans',system-ui,sans-serif"}}>
+    <div style={{background:"white",fontFamily:"'DM Sans',system-ui,sans-serif"}}>
       <style>{NIVEL_CSS}</style>
 
       <nav className="sgn-nav">
@@ -5218,7 +5218,7 @@ function NivelFundador({setPage}:{setPage:(p:any)=>void}) {
   ];
 
   return (
-    <div className="sgn-dark" style={{fontFamily:"'DM Sans',system-ui,sans-serif",minHeight:"unset"}}>
+    <div className="sgn-dark" style={{fontFamily:"'DM Sans',system-ui,sans-serif"}}>
       <style>{NIVEL_CSS}</style>
 
       <nav className="sgn-nav sgn-dark">
