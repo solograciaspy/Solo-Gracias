@@ -192,7 +192,7 @@ function Nav({page, setPage}:{page:string, setPage:(p:any)=>void}) {
 
         <div className="sg-nav-actions" style={{display:"flex",alignItems:"center",gap:12}}>
           <button className="sg-nav-ingresar" onClick={()=>goTo("onboarding")} style={{fontSize:14,color:"#6B21A8",background:"none",border:"none",cursor:"pointer",fontWeight:500}}>Ingresar</button>
-          <button className="sg-nav-cta" onClick={()=>goTo("onboarding")} style={{background:"#6B21A8",color:"white",border:"none",borderRadius:50,padding:"11px 24px",fontWeight:600,fontSize:14,cursor:"pointer"}}>Comenzar gratis</button>
+          <button className="sg-nav-cta" onClick={()=>goTo("registro-programas")} style={{background:"#6B21A8",color:"white",border:"none",borderRadius:50,padding:"11px 24px",fontWeight:600,fontSize:14,cursor:"pointer"}}>Comenzar gratis</button>
           <button className="sg-nav-burger" onClick={()=>setMenuOpen(!menuOpen)} style={{display:"none",alignItems:"center",justifyContent:"center",width:40,height:40,background:"none",border:"none",cursor:"pointer",flexDirection:"column",gap:5}}>
             <span style={{width:22,height:2,background:"#3D1E7A",borderRadius:2,transition:"all 0.3s",...(menuOpen?{transform:"rotate(45deg) translate(5px,5px)"}:{})}}/>
             <span style={{width:22,height:2,background:"#3D1E7A",borderRadius:2,transition:"all 0.3s",...(menuOpen?{opacity:0}:{})}}/>
@@ -209,7 +209,7 @@ function Nav({page, setPage}:{page:string, setPage:(p:any)=>void}) {
           ))}
           <div style={{marginTop:16,display:"flex",flexDirection:"column",gap:10}}>
             <button onClick={()=>goTo("onboarding")} style={{fontSize:16,color:"#6B21A8",background:"none",border:"2px solid #6B21A8",cursor:"pointer",fontWeight:600,padding:"14px",borderRadius:50,textAlign:"center"}}>Ingresar</button>
-            <button onClick={()=>goTo("onboarding")} style={{background:"#6B21A8",color:"white",border:"none",borderRadius:50,padding:"14px",fontWeight:600,fontSize:16,cursor:"pointer",textAlign:"center"}}>Comenzar gratis</button>
+            <button onClick={()=>goTo("registro-programas")} style={{background:"#6B21A8",color:"white",border:"none",borderRadius:50,padding:"14px",fontWeight:600,fontSize:16,cursor:"pointer",textAlign:"center"}}>Comenzar gratis</button>
           </div>
         </div>
       )}
@@ -491,7 +491,7 @@ function Home({setPage, goToExperiencia, onAuthClick}:{setPage:(p:any)=>void, go
 
           <div style={{display:"flex",gap:14,justifyContent:"center",flexWrap:"wrap",marginBottom:52}}>
 
-            <button onClick={()=>setPage("onboarding")} style={{background:"white",color:"#3D1E7A",fontWeight:700,fontSize:16,padding:"16px 36px",borderRadius:50,border:"none",cursor:"pointer"}}>Comenzar 30 dias gratis</button>
+            <button onClick={()=>setPage("registro-programas")} style={{background:"white",color:"#3D1E7A",fontWeight:700,fontSize:16,padding:"16px 36px",borderRadius:50,border:"none",cursor:"pointer"}}>Comenzar gratis</button>
 
             <button onClick={()=>document.getElementById("experiencias")?.scrollIntoView({behavior:"smooth"})} style={{background:"transparent",color:"white",fontWeight:500,fontSize:16,padding:"16px 36px",borderRadius:50,border:"2px solid rgba(255,255,255,0.4)",cursor:"pointer"}}>Explorar experiencias</button>
 
@@ -4150,17 +4150,27 @@ function ListaEsperaForm() {
 
 export default function App() {
 
-  const [page, setPage] = useState<"home"|"membresia"|"pago"|"academia"|"academia-instructores"|"onboarding"|"comunidad"|"gamificacion"|"experiencia"|"neurociencia">("home");
+  const [page, setPage] = useState<"home"|"membresia"|"pago"|"academia"|"academia-instructores"|"onboarding"|"comunidad"|"gamificacion"|"experiencia"|"neurociencia"|"registro-programas"|"programas-gratuitos">("home");
 
   useEffect(() => { window.scrollTo(0, 0); }, [page]);
 
   const [experienciaActual, setExperienciaActual] = useState<string>("meditacion");
   const { user, loading: userLoading, signOut } = useUser();
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showPromoModal, setShowPromoModal] = useState(false);
+
+  // Show promo modal after 3 seconds — only once per page load
+  useEffect(() => {
+    if (page !== "home") return;
+    const t = setTimeout(() => {
+      setShowPromoModal(true);
+    }, 3000);
+    return () => clearTimeout(t);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const goToExperiencia = (id:string) => { setExperienciaActual(id); setPage("experiencia"); };
 
-  const noNav = page==="onboarding"||page==="gamificacion";
+  const noNav = page==="onboarding"||page==="gamificacion"||page==="registro-programas";
 
   return (
 
@@ -4190,6 +4200,17 @@ export default function App() {
 
       {page==="neurociencia"&&<NeurocienciaPage setPage={setPage}/>}
 
+      {page==="registro-programas"&&<RegistroProgramas setPage={setPage}/>}
+
+      {page==="programas-gratuitos"&&<ProgramasGratuitos setPage={setPage}/>}
+
+      {showPromoModal && (
+        <PromoModal
+          onClose={() => setShowPromoModal(false)}
+          onCTA={() => { setShowPromoModal(false); setPage("registro-programas"); }}
+        />
+      )}
+
       {showAuthModal && (
         <AuthModal
           onClose={() => setShowAuthModal(false)}
@@ -4199,4 +4220,484 @@ export default function App() {
     </>
   );
 
+}
+// ─── REGISTRO PROGRAMAS GRATUITOS ─────────────────────────────────────────────
+function RegistroProgramas({setPage}:{setPage:(p:any)=>void}) {
+  const [nombre, setNombre] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [prefijo, setPrefijo] = React.useState("+595");
+  const [tel, setTel] = React.useState("");
+
+  const paises = [
+    {c:"🇵🇾",p:"+595"},{c:"🇦🇷",p:"+54"},{c:"🇧🇷",p:"+55"},{c:"🇨🇴",p:"+57"},
+    {c:"🇲🇽",p:"+52"},{c:"🇨🇱",p:"+56"},{c:"🇵🇪",p:"+51"},{c:"🇺🇾",p:"+598"},
+    {c:"🇧🇴",p:"+591"},{c:"🇪🇨",p:"+593"},{c:"🇻🇪",p:"+58"},{c:"🇪🇸",p:"+34"},
+    {c:"🇺🇸",p:"+1"},{c:"🇵🇹",p:"+351"},
+  ];
+
+  const handleSubmit = (e:React.FormEvent) => {
+    e.preventDefault();
+    // TODO: guardar en Supabase / Formspree
+    setPage("programas-gratuitos");
+  };
+
+  const inp:React.CSSProperties = {
+    width:"100%", height:50, padding:"0 16px",
+    border:"1.5px solid #E8E0F0", borderRadius:12,
+    fontFamily:"system-ui,sans-serif", fontSize:15, color:"#2D1B4E",
+    background:"white", outline:"none",
+  };
+
+  return (
+    <div style={{minHeight:"100vh",background:"#fff",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"80px 24px 40px"}}>
+
+      {/* Logo */}
+      <button onClick={()=>setPage("home")} style={{display:"flex",alignItems:"center",gap:10,background:"none",border:"none",cursor:"pointer",marginBottom:40}}>
+        <SpiralLogo color="#3D1E7A" size={42}/>
+        <span style={{fontFamily:"Georgia,serif",color:"#3D1E7A",fontSize:18,fontWeight:300,letterSpacing:"0.16em"}}>SOLO GRACIAS</span>
+      </button>
+
+      {/* Card */}
+      <div style={{width:"100%",maxWidth:440}}>
+        <h1 style={{fontFamily:"Georgia,serif",fontSize:"clamp(22px,5vw,30px)",fontWeight:400,color:"#2D1B4E",textAlign:"center",lineHeight:1.25,marginBottom:6}}>
+          Tu transformación<br/>comienza <em style={{color:"#C9A84C"}}>ahora</em>
+        </h1>
+        <p style={{fontSize:13,color:"#888",textAlign:"center",marginBottom:32,fontWeight:300}}>
+          Registrate para acceder a tus 3 programas gratuitos
+        </p>
+
+        <form onSubmit={handleSubmit} style={{display:"flex",flexDirection:"column",gap:14}}>
+
+          {/* Nombre */}
+          <div style={{display:"flex",flexDirection:"column",gap:5}}>
+            <label style={{fontSize:11,fontWeight:500,color:"#555",letterSpacing:"0.06em",textTransform:"uppercase"}}>Nombre completo</label>
+            <input style={inp} type="text" placeholder="¿Cómo te llamás?" value={nombre} onChange={e=>setNombre(e.target.value)} required autoComplete="name"/>
+          </div>
+
+          {/* Email */}
+          <div style={{display:"flex",flexDirection:"column",gap:5}}>
+            <label style={{fontSize:11,fontWeight:500,color:"#555",letterSpacing:"0.06em",textTransform:"uppercase"}}>Correo electrónico</label>
+            <input style={inp} type="email" placeholder="tu@email.com" value={email} onChange={e=>setEmail(e.target.value)} required autoComplete="email"/>
+          </div>
+
+          {/* Teléfono */}
+          <div style={{display:"flex",flexDirection:"column",gap:5}}>
+            <label style={{fontSize:11,fontWeight:500,color:"#555",letterSpacing:"0.06em",textTransform:"uppercase"}}>Teléfono</label>
+            <div style={{display:"flex",gap:8}}>
+              <select
+                value={prefijo}
+                onChange={e=>setPrefijo(e.target.value)}
+                style={{width:110,height:50,padding:"0 10px 0 14px",border:"1.5px solid #E8E0F0",borderRadius:12,fontFamily:"system-ui,sans-serif",fontSize:14,color:"#2D1B4E",background:"white",outline:"none",appearance:"none",backgroundImage:"url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239B6DFF' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E\")",backgroundRepeat:"no-repeat",backgroundPosition:"right 10px center",cursor:"pointer"}}
+              >
+                {paises.map(({c,p})=>(
+                  <option key={p} value={p}>{c} {p}</option>
+                ))}
+              </select>
+              <input
+                style={{...inp,flex:1}}
+                type="tel"
+                placeholder="Número de teléfono"
+                value={tel}
+                onChange={e=>setTel(e.target.value)}
+                autoComplete="tel"
+              />
+            </div>
+          </div>
+
+          {/* Botón */}
+          <button
+            type="submit"
+            style={{width:"100%",height:56,marginTop:8,background:"#6B21A8",color:"white",border:"none",borderRadius:14,fontFamily:"system-ui,sans-serif",fontSize:15,fontWeight:500,letterSpacing:"0.02em",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,transition:"opacity 0.2s"}}
+          >
+            Desbloquear mis programas gratuitos →
+          </button>
+
+        </form>
+
+        <p style={{marginTop:16,fontSize:11,color:"#AAA",textAlign:"center",lineHeight:1.5}}>
+          Al registrarte aceptás recibir contenido de Solo Gracias.<br/>Sin spam. Podés darte de baja cuando quieras.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ─── PROGRAMAS GRATUITOS ───────────────────────────────────────────────────────
+function ProgramasGratuitos({setPage}:{setPage:(p:any)=>void}) {
+
+  const programas = [
+    {
+      num:"01",
+      titulo:"El Poder de tus Palabras",
+      sub:"Cómo los decretos transforman tu realidad",
+      desc:"Las palabras que pronunciás cada día están construyendo tu vida. Descubrí por qué lo que decís tiene poder real y cómo usar los decretos como herramienta de transformación.",
+      img:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=700&q=80&fit=crop&crop=center",
+      episodios:[
+        "El lenguaje como herramienta creadora",
+        "Palabras que sanan, palabras que limitan",
+        "Cómo formular un decreto que funciona",
+        "Tu vocabulario interno — el diálogo contigo",
+        "Práctica diaria de decretos en 5 minutos",
+        "Reprogramando el lenguaje hacia la abundancia",
+      ],
+    },
+    {
+      num:"02",
+      titulo:"Pedid y Recibiréis",
+      sub:"La sabiduría bíblica aplicada a tu vida hoy",
+      desc:"Una de las enseñanzas más poderosas de todos los tiempos, revisitada desde nuestra cultura latinoamericana. No como religión — como principio de vida que funciona.",
+      img:"https://images.unsplash.com/photo-1448375240586-882707db888b?w=700&q=80&fit=crop&crop=center",
+      episodios:[
+        "El principio de pedir — más allá de la religión",
+        "¿Qué bloquea tu capacidad de recibir?",
+        "Pedir con claridad — el arte de ser específico",
+        "La gratitud como puerta de acceso",
+        "Confiar en el proceso — soltar el control",
+        "Recibir con gracia — el arte de aceptar",
+      ],
+    },
+    {
+      num:"03",
+      titulo:"Sostén tu Vibración",
+      sub:"El arte de mantenerte en frecuencia alta",
+      desc:"La vibración no es un concepto abstracto — es el estado desde el que atraés o rechazás lo que llega a tu vida. Aprendé a sostenerla en el tiempo con práctica real.",
+      img:"https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?w=700&q=80&fit=crop&crop=center",
+      episodios:[
+        "¿Qué es la vibración y cómo se mide?",
+        "Lo que baja tu frecuencia sin que te des cuenta",
+        "Herramientas para elevar tu vibración hoy",
+        "Cómo recuperar la frecuencia cuando caés",
+        "Entorno, personas y vibración colectiva",
+        "El hábito de la frecuencia alta — práctica sostenida",
+      ],
+    },
+  ];
+
+  const V="#3D1E7A", VM="#6B21A8", G="#C9A84C", T2="#6B5F82", BG="#F9F7FF";
+  const BD="rgba(61,30,122,0.1)";
+
+  return (
+    <div style={{background:"#fff",color:V,fontFamily:"system-ui,sans-serif"}}>
+
+      {/* HERO */}
+      <section style={{padding:"80px 24px 64px",textAlign:"center",borderBottom:`1px solid ${BD}`}}>
+        <div style={{display:"inline-flex",alignItems:"center",gap:6,padding:"5px 16px",border:"1px solid rgba(201,168,76,0.4)",borderRadius:50,fontSize:11,fontWeight:500,color:"#7B5800",background:"rgba(201,168,76,0.08)",letterSpacing:"0.08em",textTransform:"uppercase" as const,marginBottom:28}}>
+          ✦ Acceso gratuito · De por vida
+        </div>
+        <h1 style={{fontFamily:"Georgia,serif",fontSize:"clamp(36px,6vw,64px)",fontWeight:400,color:V,lineHeight:1.1,letterSpacing:"-0.01em",marginBottom:20}}>
+          Tu transformación<br/><em style={{color:G}}>comienza aquí</em>
+        </h1>
+        <p style={{fontSize:"clamp(15px,2vw,18px)",color:T2,maxWidth:520,margin:"0 auto 48px",lineHeight:1.7,fontWeight:300}}>
+          Tres programas de iniciación creados para darte herramientas reales. No teoría — práctica que podés aplicar hoy mismo.
+        </p>
+        <div style={{display:"flex",justifyContent:"center",gap:56,flexWrap:"wrap" as const}}>
+          {[["3","Programas"],["18","Episodios"],["~3hs","de contenido"],["∞","Acceso"]].map(([n,l])=>(
+            <div key={l}>
+              <span style={{fontFamily:"Georgia,serif",fontSize:36,fontWeight:400,color:VM,display:"block",lineHeight:1,marginBottom:4}}>{n}</span>
+              <span style={{fontSize:11,color:T2,letterSpacing:"0.06em",textTransform:"uppercase" as const}}>{l}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* INTRO */}
+      <section style={{maxWidth:700,margin:"0 auto",padding:"64px 24px 48px",textAlign:"center"}}>
+        <h2 style={{fontFamily:"Georgia,serif",fontSize:"clamp(24px,3.5vw,38px)",fontWeight:400,color:V,marginBottom:16,lineHeight:1.2}}>
+          La sabiduría que transforma<br/>no se traduce — se vive
+        </h2>
+        <p style={{fontSize:16,color:T2,lineHeight:1.75,fontWeight:300,marginBottom:44}}>
+          Estos programas nacieron desde adentro de nuestra cultura latinoamericana. Cada uno te da una herramienta fundamental — un punto de partida real en tu camino de transformación personal.
+        </p>
+        <div style={{display:"flex",justifyContent:"center",gap:40,flexWrap:"wrap" as const}}>
+          {[
+            {icon:"⚡","title":"Acceso inmediato","sub":"Sin tarjeta. Sin costo."},
+            {icon:"♾️","title":"De por vida","sub":"Volvés cuando quieras."},
+            {icon:"🌎","title":"Tu idioma","sub":"Desde tu cultura."},
+          ].map(({icon,title,sub})=>(
+            <div key={title} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:8,maxWidth:140}}>
+              <div style={{width:44,height:44,borderRadius:12,background:BG,border:`1px solid ${BD}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20}}>{icon}</div>
+              <div style={{fontSize:13,color:T2,textAlign:"center",lineHeight:1.4}}>
+                <strong style={{fontFamily:"Georgia,serif",color:V,display:"block",marginBottom:2,fontWeight:400,fontSize:13}}>{title}</strong>{sub}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* PROGRAMS */}
+      <section style={{maxWidth:1100,margin:"0 auto",padding:"16px 24px 96px"}}>
+        <p style={{fontSize:11,fontWeight:500,letterSpacing:"0.12em",textTransform:"uppercase" as const,color:G,textAlign:"center",marginBottom:10}}>Programas gratuitos</p>
+        <h2 style={{fontFamily:"Georgia,serif",fontSize:"clamp(26px,4vw,44px)",fontWeight:400,color:V,textAlign:"center",marginBottom:12,lineHeight:1.15}}>
+          Tres puertas.<br/>Una transformación.
+        </h2>
+        <p style={{textAlign:"center",fontSize:15,color:T2,fontWeight:300,maxWidth:500,margin:"0 auto 52px",lineHeight:1.65}}>
+          Elegí por dónde empezar. No hay orden correcto — hay el que tu corazón elige primero.
+        </p>
+
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(310px,1fr))",gap:26}}>
+          {programas.map((prog)=>(
+            <div key={prog.num} style={{borderRadius:20,overflow:"hidden",border:`1px solid ${BD}`,background:"white",transition:"transform 0.28s,box-shadow 0.28s"}}
+              onMouseEnter={e=>{(e.currentTarget as HTMLDivElement).style.transform="translateY(-6px)";(e.currentTarget as HTMLDivElement).style.boxShadow="0 20px 50px rgba(61,30,122,0.10)"}}
+              onMouseLeave={e=>{(e.currentTarget as HTMLDivElement).style.transform="translateY(0)";(e.currentTarget as HTMLDivElement).style.boxShadow="none"}}
+            >
+              {/* Imagen */}
+              <div style={{height:220,position:"relative",overflow:"hidden"}}>
+                <img src={prog.img} alt={prog.titulo} style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center",display:"block"}}/>
+                <div style={{position:"absolute",inset:0,background:"linear-gradient(to bottom,rgba(61,30,122,0.15) 0%,transparent 40%,rgba(15,8,32,0.55) 100%)"}}/>
+                <div style={{position:"absolute",top:14,left:14,display:"flex",gap:6,zIndex:2}}>
+                  <span style={{padding:"4px 10px",background:"rgba(255,255,255,0.95)",borderRadius:20,fontSize:10,fontWeight:600,color:VM,textTransform:"uppercase" as const,letterSpacing:"0.04em"}}>Gratis</span>
+                  <span style={{padding:"4px 10px",background:G,borderRadius:20,fontSize:10,fontWeight:600,color:"white",textTransform:"uppercase" as const}}>6 episodios</span>
+                </div>
+                <span style={{position:"absolute",bottom:14,left:16,fontFamily:"Georgia,serif",fontSize:11,color:"rgba(255,255,255,0.75)",letterSpacing:"0.1em",textTransform:"uppercase" as const,zIndex:2}}>
+                  Programa {prog.num}
+                </span>
+              </div>
+
+              {/* Body */}
+              <div style={{padding:"22px 22px 24px"}}>
+                <h3 style={{fontFamily:"Georgia,serif",fontSize:21,fontWeight:400,color:V,lineHeight:1.2,marginBottom:4}}>{prog.titulo}</h3>
+                <p style={{fontFamily:"Georgia,serif",fontSize:13,color:G,fontStyle:"italic",marginBottom:12}}>{prog.sub}</p>
+                <p style={{fontSize:13,color:T2,lineHeight:1.65,fontWeight:300,marginBottom:18}}>{prog.desc}</p>
+
+                <p style={{fontSize:10,fontWeight:600,letterSpacing:"0.08em",textTransform:"uppercase" as const,color:T2,marginBottom:7}}>Episodios</p>
+                <ul style={{listStyle:"none",display:"flex",flexDirection:"column",gap:4,marginBottom:18}}>
+                  {prog.episodios.map((ep,i)=>(
+                    <li key={i} style={{display:"flex",alignItems:"center",gap:9,padding:"7px 10px",background:BG,borderRadius:8,border:`1px solid ${BD}`}}>
+                      <span style={{width:20,height:20,background:VM,borderRadius:"50%",fontSize:9,fontWeight:600,color:"white",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{i+1}</span>
+                      <span style={{fontSize:12,color:V,flex:1}}>{ep}</span>
+                      <span style={{fontSize:10,color:T2,background:"rgba(201,168,76,0.12)",padding:"2px 6px",borderRadius:8,whiteSpace:"nowrap" as const}}>~10 min</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <button disabled style={{width:"100%",height:44,borderRadius:10,border:`1.5px solid #DDD`,background:"transparent",color:"#BBB",fontSize:13,fontWeight:500,cursor:"default",fontFamily:"system-ui,sans-serif"}}>
+                  Próximamente
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* DIVIDER */}
+      <div style={{maxWidth:800,margin:"0 auto",padding:"0 24px",display:"flex",alignItems:"center",gap:16,opacity:0.28}}>
+        <div style={{flex:1,height:1,background:`linear-gradient(to right,transparent,${G},transparent)`}}/>
+        <div style={{width:5,height:5,background:G,borderRadius:"50%"}}/>
+        <div style={{flex:1,height:1,background:`linear-gradient(to right,${G},transparent)`}}/>
+      </div>
+
+      {/* CTA FINAL */}
+      <section style={{padding:"80px 24px",textAlign:"center",background:BG,borderTop:`1px solid ${BD}`}}>
+        <span style={{fontSize:11,fontWeight:500,letterSpacing:"0.1em",textTransform:"uppercase" as const,color:"#9B6DFF",marginBottom:18,display:"block"}}>¿Querés ir más lejos?</span>
+        <h2 style={{fontFamily:"Georgia,serif",fontSize:"clamp(26px,4.5vw,48px)",fontWeight:400,color:V,lineHeight:1.12,marginBottom:14}}>
+          Si esto es <em style={{color:G}}>gratis</em>,<br/>imaginá lo que es pago.
+        </h2>
+        <p style={{fontSize:16,color:T2,fontWeight:300,margin:"0 auto 34px",maxWidth:460,lineHeight:1.7}}>
+          Accedé a todos los programas, instructores certificados, comunidad y mucho más. Sin compromiso.
+        </p>
+        <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap" as const}}>
+          <button onClick={()=>setPage("membresia")} style={{padding:"14px 32px",background:VM,color:"white",borderRadius:50,fontSize:14,fontWeight:600,border:"none",cursor:"pointer",fontFamily:"system-ui,sans-serif",transition:"opacity 0.2s"}}>
+            Ver planes de membresía →
+          </button>
+          <button onClick={()=>setPage("home")} style={{padding:"14px 32px",border:`1.5px solid ${BD}`,color:V,borderRadius:50,fontSize:14,background:"transparent",cursor:"pointer",fontFamily:"system-ui,sans-serif"}}>
+            Explorar la plataforma
+          </button>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer style={{borderTop:"1px solid #f0f0f0",padding:"24px 40px",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap" as const,gap:10}}>
+        <span style={{fontSize:12,color:"#AAA"}}>© 2026 Solo Gracias · sologracias.com</span>
+        <div style={{display:"flex",gap:20}}>
+          {["Privacidad","Términos","info@sologracias.com"].map(l=>(
+            <span key={l} style={{fontSize:12,color:"#AAA",cursor:"pointer"}}>{l}</span>
+          ))}
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+// ─── PROMO MODAL — aparece 3 segundos después de entrar al home ───────────────
+function PromoModal({onClose, onCTA}:{onClose:()=>void, onCTA:()=>void}) {
+
+  // Close on ESC key
+  React.useEffect(() => {
+    const handler = (e:KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [onClose]);
+
+  const [nombre, setNombre] = React.useState("");
+  const [email, setEmail]   = React.useState("");
+
+  const handleSubmit = (e:React.FormEvent) => {
+    e.preventDefault();
+    // TODO: guardar en Formspree / Supabase
+    onCTA();
+  };
+
+  return (
+    // Backdrop
+    <div
+      onClick={onClose}
+      style={{
+        position:"fixed", inset:0, zIndex:9999,
+        background:"rgba(10,4,24,0.78)",
+        backdropFilter:"blur(6px)",
+        display:"flex", alignItems:"center", justifyContent:"center",
+        padding:24,
+        animation:"sg-fade-in 0.3s ease both",
+      }}
+    >
+      <style>{`
+        @keyframes sg-fade-in  { from{opacity:0} to{opacity:1} }
+        @keyframes sg-slide-up { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+      `}</style>
+
+      {/* Card */}
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          width:"100%", maxWidth:860,
+          borderRadius:20,
+          overflow:"hidden",
+          display:"flex",
+          boxShadow:"0 32px 80px rgba(0,0,0,0.5)",
+          animation:"sg-slide-up 0.35s cubic-bezier(0.22,1,0.36,1) both",
+          position:"relative",
+        }}
+      >
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          style={{
+            position:"absolute", top:14, right:14, zIndex:10,
+            width:32, height:32, borderRadius:"50%",
+            background:"rgba(255,255,255,0.15)",
+            border:"none", cursor:"pointer",
+            display:"flex", alignItems:"center", justifyContent:"center",
+            color:"white", fontSize:18, lineHeight:1,
+            transition:"background 0.2s",
+          }}
+        >✕</button>
+
+        {/* LEFT — imagen collage instructores */}
+        <div style={{
+          width:"42%", flexShrink:0,
+          background:"linear-gradient(135deg, #3D1E7A 0%, #6B21A8 50%, #1A0838 100%)",
+          position:"relative",
+          minHeight:420,
+          display:"flex", flexDirection:"column",
+          alignItems:"center", justifyContent:"flex-end",
+          padding:"0 0 32px",
+        }}>
+          {/* Grid de fotos placeholder — reemplazar con fotos reales */}
+          <div style={{
+            position:"absolute", inset:0,
+            display:"grid",
+            gridTemplateColumns:"1fr 1fr 1fr",
+            gridTemplateRows:"1fr 1fr 1fr",
+            gap:3, padding:3, opacity:0.85,
+          }}>
+            {[
+              "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=70&fit=crop&crop=face",
+              "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=70&fit=crop&crop=face",
+              "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&q=70&fit=crop&crop=face",
+              "https://images.unsplash.com/photo-1552058544-f2b08422138a?w=200&q=70&fit=crop&crop=face",
+              "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&q=70&fit=crop&crop=face",
+              "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=200&q=70&fit=crop&crop=face",
+              "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&q=70&fit=crop&crop=face",
+              "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=70&fit=crop&crop=face",
+              "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&q=70&fit=crop&crop=face",
+            ].map((src,i) => (
+              <img key={i} src={src} alt=""
+                style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top"}}
+              />
+            ))}
+          </div>
+          {/* Gradient overlay bottom */}
+          <div style={{position:"absolute",bottom:0,left:0,right:0,height:"50%",background:"linear-gradient(to top,rgba(61,30,122,0.9),transparent)"}}/>
+          {/* Text over image */}
+          <div style={{position:"relative",zIndex:2,textAlign:"center",padding:"0 20px"}}>
+            <p style={{fontFamily:"Georgia,serif",fontSize:13,color:"rgba(255,255,255,0.7)",letterSpacing:"0.06em",textTransform:"uppercase",marginBottom:6}}>
+              Instructores certificados
+            </p>
+            <p style={{fontFamily:"Georgia,serif",fontSize:22,fontWeight:400,color:"white",lineHeight:1.2}}>
+              Tu sabiduría,<br/><em style={{color:"#C9A84C"}}>tu idioma.</em>
+            </p>
+          </div>
+        </div>
+
+        {/* RIGHT — form */}
+        <div style={{
+          flex:1,
+          background:"white",
+          padding:"48px 40px 40px",
+          display:"flex", flexDirection:"column", justifyContent:"center",
+        }}>
+          {/* Logo */}
+          <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:24}}>
+            <SpiralLogo color="#3D1E7A" size={32}/>
+            <span style={{fontFamily:"Georgia,serif",color:"#3D1E7A",fontSize:14,fontWeight:300,letterSpacing:"0.16em",textTransform:"uppercase"}}>Solo Gracias</span>
+          </div>
+
+          <h2 style={{fontFamily:"Georgia,serif",fontSize:"clamp(20px,2.5vw,26px)",fontWeight:400,color:"#2D1B4E",lineHeight:1.2,marginBottom:10}}>
+            Activá tu acceso gratuito<br/><em style={{color:"#C9A84C"}}>hoy mismo</em>
+          </h2>
+          <p style={{fontSize:13,color:"#6B5F82",lineHeight:1.6,marginBottom:24,fontWeight:300}}>
+            Accedé a 3 programas de transformación personal gratuitos — de por vida. Creados desde adentro de nuestra cultura latinoamericana.
+          </p>
+
+          <form onSubmit={handleSubmit} style={{display:"flex",flexDirection:"column",gap:12}}>
+            <input
+              type="text"
+              placeholder="Nombre"
+              value={nombre}
+              onChange={e=>setNombre(e.target.value)}
+              required
+              style={{
+                width:"100%", height:48, padding:"0 16px",
+                border:"1.5px solid #E8E0F0", borderRadius:10,
+                fontFamily:"system-ui,sans-serif", fontSize:14, color:"#2D1B4E",
+                outline:"none",
+              }}
+            />
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={e=>setEmail(e.target.value)}
+              required
+              style={{
+                width:"100%", height:48, padding:"0 16px",
+                border:"1.5px solid #E8E0F0", borderRadius:10,
+                fontFamily:"system-ui,sans-serif", fontSize:14, color:"#2D1B4E",
+                outline:"none",
+              }}
+            />
+            <button
+              type="submit"
+              style={{
+                width:"100%", height:50,
+                background:"#6B21A8", color:"white",
+                border:"none", borderRadius:10,
+                fontFamily:"system-ui,sans-serif",
+                fontSize:14, fontWeight:600, cursor:"pointer",
+                transition:"opacity 0.2s",
+                marginTop:4,
+              }}
+            >
+              Desbloquear mis programas gratuitos →
+            </button>
+          </form>
+
+          <p style={{marginTop:14,fontSize:11,color:"#AAA",lineHeight:1.5}}>
+            Al suscribirte aceptás recibir contenido de Solo Gracias. Sin spam. Podés darte de baja cuando quieras. Consultá nuestra{" "}
+            <span style={{color:"#6B21A8",cursor:"pointer",textDecoration:"underline"}}>Política de privacidad</span>.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 }
