@@ -4799,7 +4799,7 @@ const NIVEL_CSS = `
 @keyframes sgNivItemIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
 @keyframes sgNivFadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
-.sgn-nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;background:rgba(255,255,255,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(61,30,122,.07);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(24px,5vw,60px);animation:sgNivNavIn .6s cubic-bezier(.22,1,.36,1) both}
+.sgn-nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;background:rgba(255,255,255,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(61,30,122,.07);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(24px,5vw,60px)}
 .sgn-logo{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer;background:none;border:none}
 .sgn-logo-text{font-family:Georgia,serif;color:#3D1E7A;font-size:17px;font-weight:300;letter-spacing:.14em;text-transform:uppercase}
 .sgn-back{font-size:13px;color:#5E4A8A;background:none;border:none;cursor:pointer;transition:color .2s}
@@ -4918,7 +4918,7 @@ const NIVEL_CSS = `
 .sgn-dark .sgn-tbl tbody tr:nth-child(even){background:rgba(255,255,255,.02)}
 .sgn-dark .sgn-tbl tbody tr:nth-child(odd){background:rgba(255,255,255,.01)}
 .sgn-dark .sgn-tbl tbody tr.sgn-hl{background:rgba(201,168,76,.07) !important}
-.sgn-dark .sgn-tbl tbody tr:hover{background:rgba(201,168,76,.05) !important}.sgn-dark .sgn-tbl tbody tr:hover td{color:white !important}
+.sgn-dark .sgn-tbl tbody tr:hover{background:rgba(201,168,76,.25) !important}.sgn-dark .sgn-tbl tbody tr:hover td{color:white !important;background:transparent}
 .sgn-dark .sgn-tbl td{color:rgba(255,255,255,.6);border-top:1px solid rgba(255,255,255,.03)}
 .sgn-dark .sgn-ts{color:white}.sgn-dark .sgn-hl .sgn-ts{color:#C9A84C}
 .sgn-dark .sgn-ti{color:rgba(255,255,255,.85)}.sgn-dark .sgn-hl .sgn-ti{color:#C9A84C}
@@ -5235,7 +5235,7 @@ function NivelFundador({setPage}:{setPage:(p:any)=>void}) {
 
 
       <section className="sgn-hero">
-        <img className="sgn-hero-img" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1600&q=90&fit=crop&crop=top" alt="" style={{filter:"brightness(.55) saturate(.9)"}}/>
+        <img className="sgn-hero-img" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1600&q=90&fit=crop&crop=faces" alt="" style={{filter:"brightness(.55) saturate(.9)"}}/>
         <div className="sgn-hero-grad"/>
         <div className="sgn-hero-grad2"/>
         <div id="sgn-fund-particles" style={{position:"absolute",inset:0,pointerEvents:"none",overflow:"hidden",zIndex:1}}/>
@@ -5311,7 +5311,7 @@ function NivelFundador({setPage}:{setPage:(p:any)=>void}) {
 
       </div>
 
-      <footer className="sgn-footer sgn-dark" style={{marginTop:80}}>
+      <footer className="sgn-footer sgn-dark" style={{marginTop:0}}>
         <span className="sgn-fc">© 2026 Solo Gracias · sologracias.com</span>
         <div className="sgn-fl"><a href="#">Privacidad</a><a href="#">Términos</a></div>
       </footer>
