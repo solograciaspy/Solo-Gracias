@@ -4016,7 +4016,7 @@ function AcademiaInstructores({setPage}:{setPage:(p:any)=>void}) {
           ))}
           {/* ═══ INSTRUCTOR FUNDADOR CARD ═══ */}
           <div className="ai-cert-card" style={{borderRadius:16,overflow:"hidden",marginBottom:14,position:"relative",minHeight:"clamp(200px,28vw,260px)"}}>
-            <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=600&q=80&fit=crop&crop=center" alt="" style={{width:"100%",height:"100%",minHeight:"clamp(200px,28vw,260px)",objectFit:"cover",position:"absolute",inset:0}}/>
+            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=90&fit=crop&crop=center" alt="" style={{width:"100%",height:"100%",minHeight:"clamp(200px,28vw,260px)",objectFit:"cover",position:"absolute",inset:0}}/>
             <div className="ai-cert-overlay" style={{position:"absolute",inset:0,background:"linear-gradient(to right,rgba(10,4,24,0.88) 45%,rgba(10,4,24,0.2) 100%)",display:"flex",flexDirection:"column",justifyContent:"center",padding:"clamp(16px,3vw,28px)"}}>
               <span style={{fontSize:8,fontWeight:700,letterSpacing:"0.12em",textTransform:"uppercase" as const,padding:"4px 10px",borderRadius:50,display:"inline-block",width:"fit-content",marginBottom:6,background:"rgba(201,168,76,0.4)",color:"#FFD966"}}>Cupo exclusivo · Solo 11 lugares</span>
               <p style={{fontFamily:"Georgia,serif",fontSize:"clamp(28px,4vw,44px)",fontWeight:900,color:"white"}}>Instructor Fundador <span style={{fontSize:"clamp(11px,1.3vw,14px)",fontWeight:400,opacity:0.5}}>#001 — #011</span></p>
@@ -4914,7 +4914,7 @@ const NIVEL_CSS = `
 .sgn-dark .sgn-tbl tbody tr:nth-child(even){background:rgba(255,255,255,.02)}
 .sgn-dark .sgn-tbl tbody tr:nth-child(odd){background:rgba(255,255,255,.01)}
 .sgn-dark .sgn-tbl tbody tr.sgn-hl{background:rgba(201,168,76,.07) !important}
-.sgn-dark .sgn-tbl tbody tr:hover{background:rgba(201,168,76,.05) !important}
+.sgn-dark .sgn-tbl tbody tr:hover{background:rgba(201,168,76,.05) !important}.sgn-dark .sgn-tbl tbody tr:hover td{color:white !important}
 .sgn-dark .sgn-tbl td{color:rgba(255,255,255,.6);border-top:1px solid rgba(255,255,255,.03)}
 .sgn-dark .sgn-ts{color:white}.sgn-dark .sgn-hl .sgn-ts{color:#C9A84C}
 .sgn-dark .sgn-ti{color:rgba(255,255,255,.85)}.sgn-dark .sgn-hl .sgn-ti{color:#C9A84C}
@@ -5039,7 +5039,7 @@ function NivelDetalle({nivel, setPage}:{nivel:"basica"|"intermedia"|"premium", s
       badge:"Nivel 3 · Premium · + $497/mes",
       bc:"rgba(201,168,76,0.4)",bt:"#FFD966",
       price:"$2.500",sub:"+ $497/mes · mín. 12 meses",rev:50,
-      img:"https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=1600&q=90&fit=crop&crop=center",
+      img:"https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=1600&q=90&fit=crop&crop=top",
       desc:"El nivel más completo. Para instructores que quieren el mayor impacto, la mayor visibilidad y el porcentaje de ingresos más alto disponible en la plataforma.",
       incluye:[
         ["Todo del Nivel Intermedia","Más todos los beneficios de Básica e Intermedia incluidos sin excepción."],
