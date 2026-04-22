@@ -5075,7 +5075,6 @@ function NivelDetalle({nivel, setPage}:{nivel:"basica"|"intermedia"|"premium", s
           <span className="sgn-logo-text">Solo Gracias</span>
         </button>
         <button className="sgn-back" onClick={()=>setPage("academia-instructores")}>← Academia</button>
-        <a href={`${WA_LINK.replace('Academia+Solo+Gracias','nivel+'+nivel)}`} target="_blank" rel="noopener noreferrer" className="sgn-cta">Postularme →</a>
       </nav>
 
       <section className="sgn-hero">
@@ -5084,6 +5083,7 @@ function NivelDetalle({nivel, setPage}:{nivel:"basica"|"intermedia"|"premium", s
         <div className="sgn-hero-grad2"/>
         <div className="sgn-hero-c">
           <div className="sgn-badge"><div className="sgn-badge-dot"/>{d.badge}</div>
+          <a href={`${WA_LINK.replace('Academia+Solo+Gracias','nivel+'+nivel)}`} target="_blank" rel="noopener noreferrer" style={{display:"inline-flex",alignItems:"center",background:"#6B21A8",color:"white",padding:"10px 24px",borderRadius:50,fontSize:13,fontWeight:600,textDecoration:"none",marginBottom:16}}>Postularme →</a>
           <h1 className="sgn-title">{d.price} <em className="sgn-title-gold">·</em><br/><span className="sgn-title-gold">{d.rev}%</span> tuyo</h1>
           <p className="sgn-desc">{d.desc}</p>
           <div className="sgn-meta">
@@ -5227,7 +5227,6 @@ function NivelFundador({setPage}:{setPage:(p:any)=>void}) {
           <span className="sgn-logo-text">Solo Gracias</span>
         </button>
         <button className="sgn-back" onClick={()=>setPage("academia-instructores")}>← Academia</button>
-        <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="sgn-cta sgn-dark">Postularme →</a>
       </nav>
 
       <section className="sgn-hero">
@@ -5237,6 +5236,7 @@ function NivelFundador({setPage}:{setPage:(p:any)=>void}) {
         <div id="sgn-fund-particles" style={{position:"absolute",inset:0,pointerEvents:"none",overflow:"hidden",zIndex:1}}/>
         <div className="sgn-fund-num">11</div>
         <div className="sgn-hero-c">
+          <a href={WA_LINK} target="_blank" rel="noopener noreferrer" style={{display:"inline-flex",alignItems:"center",background:"#C9A84C",color:"#0A0414",padding:"10px 24px",borderRadius:50,fontSize:13,fontWeight:600,textDecoration:"none",marginBottom:20}}>Postularme →</a>
           <div className="sgn-fund-eyebrow">Cupo exclusivo · Solo 11 lugares en la historia</div>
           <h1 className="sgn-title">Instructor<br/>Fundador</h1>
           <p className="sgn-fund-sub">#001 — #011 · Para siempre</p>
