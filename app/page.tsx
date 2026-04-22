@@ -5221,18 +5221,14 @@ function NivelFundador({setPage}:{setPage:(p:any)=>void}) {
     <div className="sgn-dark" style={{fontFamily:"'DM Sans',system-ui,sans-serif",minHeight:"unset"}}>
       <style>{NIVEL_CSS}</style>
 
-
-
-
-
-
-
-
-
-
-
-
-
+      <nav className="sgn-nav sgn-dark">
+        <button className="sgn-logo sgn-back" onClick={()=>setPage("academia-instructores")}>
+          <svg width="34" height="34" viewBox="0 0 72 72" fill="none"><path d="M36 36 C36 33 34 31 31 31 C28 31 26 33 26 36 C26 40 29 43 33 44 C38 45 43 42 45 37 C47 31 44 24 39 21 C33 17 25 19 20 24 C14 30 14 39 18 46 C23 54 33 57 42 54 C52 50 58 40 56 30 C54 19 44 12 33 12 C21 12 11 20 9 32 C7 44 13 57 24 62 C36 68 51 65 59 54" stroke="#C9A84C" strokeWidth="2.5" strokeLinecap="round" fill="none"/><circle cx="36" cy="36" r="2.5" fill="#C9A84C"/></svg>
+          <span className="sgn-logo-text">Solo Gracias</span>
+        </button>
+        <button className="sgn-back" onClick={()=>setPage("academia-instructores")}>← Academia</button>
+        <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="sgn-cta sgn-dark">Postularme →</a>
+      </nav>
 
       <section className="sgn-hero">
         <img className="sgn-hero-img" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1600&q=90&fit=crop&crop=faces" alt="" style={{filter:"brightness(.55) saturate(.9)"}}/>
