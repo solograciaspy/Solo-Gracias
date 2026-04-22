@@ -4785,7 +4785,6 @@ const tablaIngresos = (pct:number) => {
 };
 
 // ─── HELPERS COMPARTIDOS ──────────────────────────────────────────────────────
-const WA_LINK = "https://wa.me/595986185526?text=Hola%2C+quiero+postularme+a+la+Academia+Solo+Gracias";
 
 const NIVEL_CSS = `
 @keyframes sgNivNavIn{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}
