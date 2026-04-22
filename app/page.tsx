@@ -4203,7 +4203,7 @@ export default function App() {
 
   const goToExperiencia = (id:string) => { setExperienciaActual(id); setPage("experiencia"); };
 
-  const noNav = page==="onboarding"||page==="gamificacion"||page==="registro-programas";
+  const noNav = page==="onboarding"||page==="gamificacion"||page==="registro-programas"||page==="nivel-fundador"||page==="nivel-basica"||page==="nivel-intermedia"||page==="nivel-premium";
 
   return (
 
@@ -4594,6 +4594,7 @@ function PromoModal({onClose, onCTA}:{onClose:()=>void, onCTA:()=>void}) {
       <style>{`
         @keyframes sg-fade-in  { from{opacity:0} to{opacity:1} }
         @keyframes sg-slide-up { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+        @media(max-width:640px){.sg-promo-left{display:none!important}.sg-promo-right{padding:28px 20px!important;min-height:auto!important}}
       `}</style>
 
       {/* Card */}
@@ -4604,7 +4605,6 @@ function PromoModal({onClose, onCTA}:{onClose:()=>void, onCTA:()=>void}) {
           borderRadius:20,
           overflow:"hidden",
           display:"flex",
-          flexWrap:"wrap" as const,
           boxShadow:"0 32px 80px rgba(0,0,0,0.5)",
           animation:"sg-slide-up 0.35s cubic-bezier(0.22,1,0.36,1) both",
           position:"relative",
@@ -4625,9 +4625,8 @@ function PromoModal({onClose, onCTA}:{onClose:()=>void, onCTA:()=>void}) {
         >✕</button>
 
         {/* LEFT — imagen collage instructores */}
-        <div style={{
-          width:"clamp(100%, 42%, 42%)",
-          flexShrink:0,
+        <div className="sg-promo-left" style={{
+          width:"42%", flexShrink:0,
           background:"linear-gradient(135deg, #3D1E7A 0%, #6B21A8 50%, #1A0838 100%)",
           position:"relative",
           minHeight:"clamp(200px, 40vw, 420px)",
@@ -4673,7 +4672,7 @@ function PromoModal({onClose, onCTA}:{onClose:()=>void, onCTA:()=>void}) {
         </div>
 
         {/* RIGHT — form */}
-        <div style={{
+        <div className="sg-promo-right" style={{
           flex:1,
           background:"white",
           padding:"48px 40px 40px",
