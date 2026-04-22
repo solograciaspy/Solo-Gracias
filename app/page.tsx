@@ -4804,7 +4804,7 @@ const NIVEL_CSS = `
 .sgn-logo-text{font-family:Georgia,serif;color:#3D1E7A;font-size:17px;font-weight:300;letter-spacing:.14em;text-transform:uppercase}@media(max-width:600px){.sgn-logo-text{display:none!important}.sgn-cta{padding:7px 12px!important;font-size:11px!important}.sgn-back{font-size:11px!important}.sgn-nav{padding:0 12px!important}}
 .sgn-back{font-size:13px;color:#5E4A8A;background:none;border:none;cursor:pointer;transition:color .2s}
 .sgn-back:hover{color:#6B21A8}
-.sgn-cta{padding:10px 24px;background:#6B21A8;color:white;border-radius:50px;font-size:13px;font-weight:500;border:none;cursor:pointer;transition:all .2s;text-decoration:none}
+.sgn-cta{padding:8px 18px;background:#6B21A8;color:white;border-radius:50px;font-size:12px;font-weight:500;border:none;cursor:pointer;transition:all .2s;text-decoration:none;white-space:nowrap;align-self:center}
 .sgn-cta:hover{background:#3D1E7A;transform:translateY(-1px)}
 
 .sgn-hero{margin-top:0;position:relative;height:100vh;min-height:520px;max-height:820px;overflow:hidden;display:flex;align-items:flex-end}
