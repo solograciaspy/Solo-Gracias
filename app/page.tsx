@@ -4978,6 +4978,7 @@ const SgnTablaIngresos = ({pct}:{pct:number}) => {
 function NivelDetalle({nivel, setPage}:{nivel:"basica"|"intermedia"|"premium", setPage:(p:any)=>void}) {
 
   React.useEffect(()=>{
+    window.scrollTo(0,0);
     const style=document.createElement("style");
     style.id="sgn-css";
     if(!document.getElementById("sgn-css")) document.head.appendChild(style);
@@ -5143,6 +5144,7 @@ function NivelDetalle({nivel, setPage}:{nivel:"basica"|"intermedia"|"premium", s
 function NivelFundador({setPage}:{setPage:(p:any)=>void}) {
 
   React.useEffect(()=>{
+    window.scrollTo(0,0);
     const style=document.createElement("style");
     style.id="sgn-css-fund";
     if(!document.getElementById("sgn-css-fund")) document.head.appendChild(style);
