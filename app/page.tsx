@@ -4881,7 +4881,7 @@ const NIVEL_CSS = `
 @keyframes sgFundNum{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes sgFundPart{0%{transform:translateY(0) translateX(0);opacity:0}15%{opacity:.8}90%{opacity:.3}100%{transform:translateY(-130px) translateX(30px);opacity:0}}
 @keyframes sgFundBorder{0%,100%{border-color:rgba(201,168,76,.15)}50%{border-color:rgba(201,168,76,.4)}}
-.sgn-dark .sgn-nav{background:rgba(10,4,20,.85);border-color:rgba(201,168,76,.08)}
+.sgn-dark .sgn-nav{background:rgba(10,4,20,.85);border-color:rgba(201,168,76,.08);display:flex;align-items:center}
 .sgn-dark .sgn-logo-text{color:#E8C96A}
 .sgn-dark .sgn-back{color:rgba(255,255,255,.35)}.sgn-dark .sgn-back:hover{color:#E8C96A}
 .sgn-dark .sgn-cta{background:#C9A84C;color:#0A0414}
