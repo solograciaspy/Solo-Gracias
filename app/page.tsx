@@ -5276,7 +5276,7 @@ function NivelFundador({setPage}:{setPage:(p:any)=>void}) {
           {beneficios.map((b)=>(
             <div key={b.n} className="sgn-ben">
               <div className="sgn-bicon">{b.n}</div>
-              <div><div className="sgn-bt">{b.t}</div><div className="sgn-bd">{b.desc}</div></div>
+              <div><div className="sgn-bt">{b.t}</div><div className="sgn-bd">{b.d}</div></div>
             </div>
           ))}
         </div>
