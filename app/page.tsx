@@ -4193,13 +4193,14 @@ export default function App() {
   // Show promo modal after 3 seconds — only once, only on home
   const promoShown = React.useRef(false);
   useEffect(() => {
+    if (page !== "home") { setShowPromoModal(false); return; }
     if (promoShown.current) return;
     promoShown.current = true;
     const t = setTimeout(() => {
-      if (page === "home") setShowPromoModal(true);
+      setShowPromoModal(true);
     }, 3000);
     return () => clearTimeout(t);
-  }, []);
+  }, [page]);
 
   const goToExperiencia = (id:string) => { setExperienciaActual(id); setPage("experiencia"); };
 
