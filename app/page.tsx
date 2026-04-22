@@ -4197,7 +4197,7 @@ export default function App() {
       if(document.body.dataset.page==="home") setShowPromoModal(true);
     }, 3000);
     return () => clearTimeout(t);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [page]);
 
   const goToExperiencia = (id:string) => { setExperienciaActual(id); setPage("experiencia"); };
 
@@ -4602,6 +4602,7 @@ function PromoModal({onClose, onCTA}:{onClose:()=>void, onCTA:()=>void}) {
           borderRadius:20,
           overflow:"hidden",
           display:"flex",
+          flexWrap:"wrap" as const,
           boxShadow:"0 32px 80px rgba(0,0,0,0.5)",
           animation:"sg-slide-up 0.35s cubic-bezier(0.22,1,0.36,1) both",
           position:"relative",
