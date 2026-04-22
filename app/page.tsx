@@ -4246,7 +4246,7 @@ export default function App() {
 
       {page==="nivel-fundador"&&<NivelFundador setPage={setPage}/>}
 
-      {showPromoModal && (
+      {showPromoModal && page==="home" && (
         <PromoModal
           onClose={() => setShowPromoModal(false)}
           onCTA={() => { setShowPromoModal(false); setPage("registro-programas"); }}
