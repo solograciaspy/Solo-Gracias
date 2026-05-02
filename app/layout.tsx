@@ -13,8 +13,33 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Solo Gracias",
-  description: "La primera plataforma de streaming de transformacion personal para hispanohablantes.",
+  title: "Solo Gracias — Tu mejor versión de cada día, finalmente en tu idioma",
+  description:
+    "La primera plataforma de crecimiento personal para los 700 millones de hispanohablantes.",
+  metadataBase: new URL("https://www.sologracias.com"),
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      name: "Solo Gracias",
+      url: "https://www.sologracias.com",
+      logo: "https://www.sologracias.com/favicon.ico",
+      sameAs: ["https://www.instagram.com/sologracias.py"],
+    },
+    {
+      "@type": "SiteNavigationElement",
+      name: ["Membresía", "Academia", "Comunidad", "Experiencias"],
+      url: [
+        "https://www.sologracias.com/#membresia",
+        "https://www.sologracias.com/#academia",
+        "https://www.sologracias.com/#comunidad",
+        "https://www.sologracias.com/#experiencias",
+      ],
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -24,7 +49,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      >
         {children}
       </body>
     </html>
