@@ -17,6 +17,9 @@ export const metadata: Metadata = {
   description:
     "La primera plataforma de crecimiento personal para los 700 millones de hispanohablantes.",
   metadataBase: new URL("https://www.sologracias.com"),
+  verification: {
+    google: "ih_EcFq-H7V-ThpUiJzqF06cnredxqSLnY-c0D06oeU",
+  },
 };
 
 const jsonLd = {
