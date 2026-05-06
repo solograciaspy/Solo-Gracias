@@ -188,6 +188,7 @@ function Nav({page, setPage}:{page:string, setPage:(p:any)=>void}) {
           <button onClick={()=>goTo("academia-instructores")} style={{fontSize:14,color:"#444",background:"none",border:"none",cursor:"pointer"}}>Academia</button>
           <button onClick={()=>goTo("home","precios")} style={{fontSize:14,color:"#444",background:"none",border:"none",cursor:"pointer"}}>Precios</button>
           <button onClick={()=>goTo("comunidad")} style={{fontSize:14,color:"#444",background:"none",border:"none",cursor:"pointer"}}>Comunidad</button>
+          <button onClick={()=>goTo("bienvenida")} style={{fontSize:14,color:"#C9A84C",background:"none",border:"none",cursor:"pointer"}}>Test</button>
         </div>
 
         <div className="sg-nav-actions" style={{display:"flex",alignItems:"center",gap:12}}>
@@ -3728,6 +3729,283 @@ function NeurocienciaPage({setPage}:{setPage:(p:any)=>void}) {
 
 }
 
+// ─── BIENVENIDA (post-pago Pagopar) ───────────────────────────────────────────
+
+function Bienvenida({setPage}:{setPage:(p:any)=>void}) {
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(()=>{
+    const check = ()=>setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return ()=>window.removeEventListener("resize", check);
+  },[]);
+
+  useEffect(()=>{
+    const container = document.getElementById("bv-particles");
+    if(!container || container.childElementCount > 0) return;
+    const style = document.createElement("style");
+    style.textContent = `@keyframes bvDrift{0%{transform:translateY(0) translateX(0);opacity:0}10%{opacity:1}90%{opacity:.35}100%{transform:translateY(-120px) translateX(28px);opacity:0}}.bv-particle{position:absolute;background:#C9A84C;border-radius:50%;animation:bvDrift linear infinite;pointer-events:none}`;
+    document.head.appendChild(style);
+    for(let i=0;i<18;i++){
+      const p=document.createElement("div");
+      p.className="bv-particle";
+      const size=1+Math.random()*2.5;
+      p.style.cssText=`left:${Math.random()*100}%;bottom:${5+Math.random()*50}%;width:${size}px;height:${size}px;animation-duration:${5+Math.random()*9}s;animation-delay:${Math.random()*7}s;opacity:${.25+Math.random()*.45}`;
+      container.appendChild(p);
+    }
+    return ()=>{ if(container) container.innerHTML=""; };
+  },[]);
+
+  return (
+    <main style={{
+      minHeight:"100vh",
+      background:"white",
+      fontFamily:"system-ui,sans-serif",
+      position:"relative",
+      overflow:"hidden",
+    }}>
+      {/* Radial violeta sobre blanco */}
+      <div style={{
+        position:"absolute",
+        top:-120,
+        left:"50%",
+        transform:"translateX(-50%)",
+        width:"160%",
+        height:700,
+        background:"radial-gradient(ellipse at 50% 10%, rgba(107,33,168,0.18) 0%, rgba(76,29,149,0.10) 35%, rgba(45,15,94,0.05) 60%, transparent 80%)",
+        pointerEvents:"none",
+        zIndex:0,
+      }}/>
+      <div style={{
+        position:"absolute",
+        top:0,
+        left:"50%",
+        transform:"translateX(-50%)",
+        width:"80%",
+        height:420,
+        background:"radial-gradient(ellipse at 50% 0%, rgba(155,109,255,0.12) 0%, transparent 65%)",
+        pointerEvents:"none",
+        zIndex:0,
+      }}/>
+
+      {/* Partículas doradas */}
+      <div id="bv-particles" style={{position:"absolute",inset:0,pointerEvents:"none",overflow:"hidden",zIndex:1}}/>
+
+      {/* NAV */}
+      <nav style={{
+        position:"relative",
+        zIndex:10,
+        display:"flex",
+        alignItems:"center",
+        padding:"0 clamp(16px,4vw,40px)",
+        height:64,
+        background:"white",
+        borderBottom:"1px solid #f0f0f0",
+      }}>
+        <div style={{display:"flex",alignItems:"center",gap:10}}>
+          <SpiralLogo color="#3D1E7A" size={isMobile?32:36}/>
+          <span style={{fontFamily:"Georgia,serif",color:"#3D1E7A",fontSize:isMobile?13:16,fontWeight:300,letterSpacing:"0.16em"}}>SOLO GRACIAS</span>
+        </div>
+      </nav>
+
+      {/* HERO */}
+      <div style={{position:"relative",zIndex:2,textAlign:"center",padding:"clamp(36px,6vw,56px) clamp(16px,4vw,40px) 0"}}>
+
+        {/* Badge */}
+        <div style={{
+          display:"inline-block",
+          background:"rgba(107,33,168,0.08)",
+          border:"1px solid rgba(107,33,168,0.2)",
+          color:"#6B21A8",
+          fontSize:9,
+          fontWeight:700,
+          letterSpacing:"0.18em",
+          textTransform:"uppercase" as const,
+          padding:"5px 16px",
+          borderRadius:50,
+          marginBottom:20,
+        }}>Bienvenida</div>
+
+        {/* Título Georgia */}
+        <h1 style={{
+          fontFamily:"Georgia,serif",
+          fontSize:"clamp(32px,5vw,52px)",
+          fontWeight:900,
+          color:"#111",
+          lineHeight:1.05,
+          marginBottom:isMobile?28:36,
+        }}>
+          Ya eres parte<br/><em style={{color:"#6B21A8",fontStyle:"normal"}}>del camino.</em>
+        </h1>
+
+        {/* VIDEO — igual al hero del home */}
+        <div style={{
+          maxWidth:isMobile?"100%":580,
+          margin:"0 auto",
+          marginBottom:isMobile?36:52,
+          background:"rgba(26,8,56,0.85)",
+          borderRadius:20,
+          border:"1px solid rgba(255,255,255,0.12)",
+          aspectRatio:"16/9",
+          display:"flex",
+          flexDirection:"column" as const,
+          alignItems:"center",
+          justifyContent:"center",
+          gap:12,
+          position:"relative",
+          overflow:"hidden",
+        }}>
+          <div style={{
+            position:"absolute",
+            inset:0,
+            background:"radial-gradient(ellipse at 50% 50%, rgba(107,33,168,0.3), transparent 70%)",
+          }}/>
+          <button style={{
+            width:isMobile?52:64,
+            height:isMobile?52:64,
+            borderRadius:"50%",
+            background:"rgba(255,255,255,0.15)",
+            border:"1px solid rgba(255,255,255,0.35)",
+            display:"flex",alignItems:"center",justifyContent:"center",
+            cursor:"pointer",
+            position:"relative",zIndex:1,
+          }}>
+            <svg width={isMobile?18:22} height={isMobile?18:22} viewBox="0 0 24 24" fill="white"><polygon points="6,3 20,12 6,21"/></svg>
+          </button>
+          <p style={{color:"rgba(255,255,255,0.55)",fontSize:isMobile?9:10,letterSpacing:"0.12em",textTransform:"uppercase" as const,position:"relative",zIndex:1,margin:0}}>Video de bienvenida</p>
+          <p style={{color:"#C9A84C",fontSize:isMobile?9:10,letterSpacing:"0.1em",position:"relative",zIndex:1,margin:0}}>Próximamente</p>
+        </div>
+      </div>
+
+      {/* PASOS */}
+      <div style={{position:"relative",zIndex:2,padding:"0 clamp(16px,4vw,40px)"}}>
+        <p style={{
+          textAlign:"center",
+          fontSize:9,
+          fontWeight:700,
+          letterSpacing:"0.18em",
+          textTransform:"uppercase" as const,
+          color:"#6B21A8",
+          marginBottom:20,
+        }}>Tu camino empieza aquí</p>
+
+        <div style={{
+          display:"grid",
+          gridTemplateColumns:isMobile?"1fr":"repeat(3,1fr)",
+          gap:isMobile?12:16,
+          maxWidth:680,
+          margin:"0 auto 40px",
+        }}>
+          {/* Card 1 — Onboarding */}
+          <div style={{
+            background:"white",
+            borderRadius:18,
+            border:"1px solid rgba(107,33,168,0.12)",
+            padding:"clamp(16px,3vw,24px) 16px clamp(14px,2vw,20px)",
+            textAlign:"center",
+            boxShadow:"0 2px 16px rgba(107,33,168,0.06)",
+          }}>
+            <div style={{
+              width:36,height:36,borderRadius:"50%",
+              background:"#3D1E7A",
+              display:"flex",alignItems:"center",justifyContent:"center",
+              margin:"0 auto 12px",
+              fontFamily:"Georgia,serif",fontSize:15,color:"white",fontWeight:700,
+            }}>1</div>
+            <div style={{fontFamily:"Georgia,serif",fontSize:isMobile?13:14,fontWeight:700,color:"#1A0838",marginBottom:6}}>Onboarding</div>
+            <div style={{fontSize:10,color:"#6B21A8",lineHeight:1.5,marginBottom:10}}>Elige tus 9 áreas de transformación</div>
+            <span style={{display:"inline-block",background:"rgba(201,168,76,0.12)",color:"#C9A84C",fontSize:9,padding:"3px 10px",borderRadius:50}}>~5 minutos</span>
+          </div>
+
+          {/* Card 2 — Experiencias — destacada */}
+          <div style={{
+            background:"white",
+            borderRadius:18,
+            border:"1.5px solid #6B21A8",
+            padding:"clamp(16px,3vw,24px) 16px clamp(14px,2vw,20px)",
+            textAlign:"center",
+            boxShadow:"0 2px 16px rgba(107,33,168,0.10)",
+            position:"relative",
+          }}>
+            <div style={{
+              position:"absolute",top:-11,left:"50%",transform:"translateX(-50%)",
+              background:"#C9A84C",color:"#1A0838",
+              fontSize:8,fontWeight:700,padding:"3px 12px",borderRadius:50,
+              whiteSpace:"nowrap" as const,
+            }}>Recomendado</div>
+            <div style={{
+              width:36,height:36,borderRadius:"50%",
+              background:"#6B21A8",
+              display:"flex",alignItems:"center",justifyContent:"center",
+              margin:"0 auto 12px",
+              fontFamily:"Georgia,serif",fontSize:15,color:"white",fontWeight:700,
+            }}>2</div>
+            <div style={{fontFamily:"Georgia,serif",fontSize:isMobile?13:14,fontWeight:700,color:"#1A0838",marginBottom:6}}>Experiencias</div>
+            <div style={{fontSize:10,color:"#6B21A8",lineHeight:1.5,marginBottom:10}}>Recomendadas según tu perfil</div>
+            <span style={{display:"inline-block",background:"rgba(201,168,76,0.12)",color:"#C9A84C",fontSize:9,padding:"3px 10px",borderRadius:50}}>20 min/día</span>
+          </div>
+
+          {/* Card 3 — Comunidad */}
+          <div style={{
+            background:"white",
+            borderRadius:18,
+            border:"1px solid rgba(107,33,168,0.12)",
+            padding:"clamp(16px,3vw,24px) 16px clamp(14px,2vw,20px)",
+            textAlign:"center",
+            boxShadow:"0 2px 16px rgba(107,33,168,0.06)",
+          }}>
+            <div style={{
+              width:36,height:36,borderRadius:"50%",
+              background:"#1A0838",
+              display:"flex",alignItems:"center",justifyContent:"center",
+              margin:"0 auto 12px",
+              fontFamily:"Georgia,serif",fontSize:15,color:"#9B6DFF",fontWeight:700,
+            }}>3</div>
+            <div style={{fontFamily:"Georgia,serif",fontSize:isMobile?13:14,fontWeight:700,color:"#1A0838",marginBottom:6}}>Comunidad</div>
+            <div style={{fontSize:10,color:"#6B21A8",lineHeight:1.5,marginBottom:10}}>Únete a otros en el camino</div>
+            <span style={{display:"inline-block",background:"rgba(155,109,255,0.10)",color:"#9B6DFF",fontSize:9,padding:"3px 10px",borderRadius:50}}>Eventos en vivo</span>
+          </div>
+        </div>
+
+        {/* CTA */}
+        <div style={{textAlign:"center",paddingBottom:48}}>
+          <button
+            onClick={()=>setPage("onboarding")}
+            style={{
+              background:"#6B21A8",
+              color:"white",
+              fontFamily:"Georgia,serif",
+              fontSize:isMobile?14:15,
+              fontWeight:700,
+              padding:isMobile?"14px 40px":"16px 56px",
+              borderRadius:50,
+              border:"none",
+              cursor:"pointer",
+              width:isMobile?"100%":"auto",
+              maxWidth:isMobile?400:"none",
+              marginBottom:12,
+              display:"block",
+              margin:"0 auto 12px",
+            }}
+          >Comenzar mi camino →</button>
+          <p style={{fontSize:10,color:"#aaa",margin:0}}>Acceso completo activado · Plan Esencia</p>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div style={{
+        borderTop:"1px solid #f0f0f0",
+        padding:"16px clamp(16px,4vw,40px)",
+        textAlign:"center",
+        position:"relative",zIndex:2,
+      }}>
+        <p style={{fontSize:11,color:"#bbb",fontFamily:"Georgia,serif",fontStyle:"italic",margin:0}}>Transformación real.</p>
+      </div>
+    </main>
+  );
+}
 // ─── APP ROOT ──────────────────────────────────────────────────────────────────
 
 // ─── ACADEMIA INSTRUCTORES (BeYoga Day) ────────────────────────────────────────
@@ -4016,7 +4294,7 @@ function AcademiaInstructores({setPage}:{setPage:(p:any)=>void}) {
           ))}
           {/* ═══ INSTRUCTOR FUNDADOR CARD ═══ */}
           <div className="ai-cert-card" style={{borderRadius:16,overflow:"hidden",marginBottom:14,position:"relative",minHeight:"clamp(200px,28vw,260px)"}}>
-            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=90&fit=crop&crop=center" alt="" style={{width:"100%",height:"100%",minHeight:"clamp(200px,28vw,260px)",objectFit:"cover",position:"absolute",inset:0}}/>
+            <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=600&q=80&fit=crop&crop=center" alt="" style={{width:"100%",height:"100%",minHeight:"clamp(200px,28vw,260px)",objectFit:"cover",position:"absolute",inset:0}}/>
             <div className="ai-cert-overlay" style={{position:"absolute",inset:0,background:"linear-gradient(to right,rgba(10,4,24,0.88) 45%,rgba(10,4,24,0.2) 100%)",display:"flex",flexDirection:"column",justifyContent:"center",padding:"clamp(16px,3vw,28px)"}}>
               <span style={{fontSize:8,fontWeight:700,letterSpacing:"0.12em",textTransform:"uppercase" as const,padding:"4px 10px",borderRadius:50,display:"inline-block",width:"fit-content",marginBottom:6,background:"rgba(201,168,76,0.4)",color:"#FFD966"}}>Cupo exclusivo · Solo 11 lugares</span>
               <p style={{fontFamily:"Georgia,serif",fontSize:"clamp(28px,4vw,44px)",fontWeight:900,color:"white"}}>Instructor Fundador <span style={{fontSize:"clamp(11px,1.3vw,14px)",fontWeight:400,opacity:0.5}}>#001 — #011</span></p>
@@ -4181,30 +4459,27 @@ function ListaEsperaForm() {
 
 export default function App() {
 
-  const [page, setPage] = useState<"home"|"membresia"|"pago"|"academia"|"academia-instructores"|"onboarding"|"comunidad"|"gamificacion"|"experiencia"|"neurociencia"|"registro-programas"|"programas-gratuitos"|"nivel-basica"|"nivel-intermedia"|"nivel-premium"|"nivel-fundador">("home");
+  const [page, setPage] = useState<"home"|"membresia"|"pago"|"academia"|"academia-instructores"|"onboarding"|"comunidad"|"gamificacion"|"experiencia"|"neurociencia"|"registro-programas"|"programas-gratuitos"|"nivel-basica"|"nivel-intermedia"|"nivel-premium"|"nivel-fundador"|"bienvenida">("home");
 
-  useEffect(() => { window.scrollTo(0, 0); document.body.dataset.page = page; }, [page]);
+  useEffect(() => { window.scrollTo(0, 0); }, [page]);
 
   const [experienciaActual, setExperienciaActual] = useState<string>("meditacion");
   const { user, loading: userLoading, signOut } = useUser();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showPromoModal, setShowPromoModal] = useState(false);
 
-  // Show promo modal after 3 seconds — only once, only on home
-  const promoShown = React.useRef(false);
+  // Show promo modal after 3 seconds — only once per page load
   useEffect(() => {
-    if (page !== "home") { setShowPromoModal(false); return; }
-    if (promoShown.current) return;
-    promoShown.current = true;
+    if (page !== "home") return;
     const t = setTimeout(() => {
       setShowPromoModal(true);
     }, 3000);
     return () => clearTimeout(t);
-  }, [page]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const goToExperiencia = (id:string) => { setExperienciaActual(id); setPage("experiencia"); };
 
-  const noNav = page==="onboarding"||page==="gamificacion"||page==="registro-programas"||page==="nivel-fundador"||page==="nivel-basica"||page==="nivel-intermedia"||page==="nivel-premium";
+  const noNav = page==="onboarding"||page==="gamificacion"||page==="registro-programas";
 
   return (
 
@@ -4245,8 +4520,9 @@ export default function App() {
       {page==="nivel-premium"&&<NivelDetalle nivel="premium" setPage={setPage}/>}
 
       {page==="nivel-fundador"&&<NivelFundador setPage={setPage}/>}
+      {page==="bienvenida"&&<Bienvenida setPage={setPage}/>}
 
-      {showPromoModal && page==="home" && (
+      {showPromoModal && (
         <PromoModal
           onClose={() => setShowPromoModal(false)}
           onCTA={() => { setShowPromoModal(false); setPage("registro-programas"); }}
@@ -4595,14 +4871,13 @@ function PromoModal({onClose, onCTA}:{onClose:()=>void, onCTA:()=>void}) {
       <style>{`
         @keyframes sg-fade-in  { from{opacity:0} to{opacity:1} }
         @keyframes sg-slide-up { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
-        @media(max-width:640px){.sg-promo-left{display:none!important}.sg-promo-right{padding:28px 20px!important;min-height:auto!important}}
       `}</style>
 
       {/* Card */}
       <div
         onClick={e => e.stopPropagation()}
         style={{
-          width:"100%", maxWidth:"min(860px,95vw)",
+          width:"100%", maxWidth:860,
           borderRadius:20,
           overflow:"hidden",
           display:"flex",
@@ -4626,11 +4901,11 @@ function PromoModal({onClose, onCTA}:{onClose:()=>void, onCTA:()=>void}) {
         >✕</button>
 
         {/* LEFT — imagen collage instructores */}
-        <div className="sg-promo-left" style={{
+        <div style={{
           width:"42%", flexShrink:0,
           background:"linear-gradient(135deg, #3D1E7A 0%, #6B21A8 50%, #1A0838 100%)",
           position:"relative",
-          minHeight:"clamp(200px, 40vw, 420px)",
+          minHeight:420,
           display:"flex", flexDirection:"column",
           alignItems:"center", justifyContent:"flex-end",
           padding:"0 0 32px",
@@ -4673,7 +4948,7 @@ function PromoModal({onClose, onCTA}:{onClose:()=>void, onCTA:()=>void}) {
         </div>
 
         {/* RIGHT — form */}
-        <div className="sg-promo-right" style={{
+        <div style={{
           flex:1,
           background:"white",
           padding:"48px 40px 40px",
@@ -4789,7 +5064,6 @@ const tablaIngresos = (pct:number) => {
 };
 
 // ─── HELPERS COMPARTIDOS ──────────────────────────────────────────────────────
-
 const NIVEL_CSS = `
 @keyframes sgNivNavIn{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}
 @keyframes sgNivHeroUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
@@ -4799,15 +5073,15 @@ const NIVEL_CSS = `
 @keyframes sgNivItemIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
 @keyframes sgNivFadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
-.sgn-nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;background:rgba(255,255,255,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(61,30,122,.07);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,3vw,40px);box-sizing:border-box}
+.sgn-nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;background:rgba(255,255,255,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(61,30,122,.07);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(24px,5vw,60px);animation:sgNivNavIn .6s cubic-bezier(.22,1,.36,1) both}
 .sgn-logo{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer;background:none;border:none}
-.sgn-logo-text{font-family:Georgia,serif;color:#3D1E7A;font-size:17px;font-weight:300;letter-spacing:.14em;text-transform:uppercase}@media(max-width:600px){.sgn-logo-text{display:none!important}.sgn-cta{padding:7px 12px!important;font-size:11px!important}.sgn-back{font-size:11px!important}.sgn-nav{padding:0 12px!important}}
+.sgn-logo-text{font-family:Georgia,serif;color:#3D1E7A;font-size:17px;font-weight:300;letter-spacing:.14em;text-transform:uppercase}
 .sgn-back{font-size:13px;color:#5E4A8A;background:none;border:none;cursor:pointer;transition:color .2s}
 .sgn-back:hover{color:#6B21A8}
-.sgn-cta{padding:8px 18px;background:#6B21A8;color:white;border-radius:50px;font-size:12px;font-weight:500;border:none;cursor:pointer;transition:all .2s;text-decoration:none;white-space:nowrap;display:inline-flex;align-items:center;line-height:1}
+.sgn-cta{padding:10px 24px;background:#6B21A8;color:white;border-radius:50px;font-size:13px;font-weight:500;border:none;cursor:pointer;transition:all .2s;text-decoration:none}
 .sgn-cta:hover{background:#3D1E7A;transform:translateY(-1px)}
 
-.sgn-hero{margin-top:0;position:relative;height:100vh;min-height:520px;max-height:820px;overflow:hidden;display:flex;align-items:flex-end}
+.sgn-hero{margin-top:64px;position:relative;height:calc(100vh - 64px);min-height:520px;max-height:760px;overflow:hidden;display:flex;align-items:flex-end}
 .sgn-hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;animation:sgNivImgZoom 12s ease-out both}
 .sgn-hero-grad{position:absolute;inset:0;background:linear-gradient(115deg,rgba(10,4,20,.88) 0%,rgba(61,30,122,.5) 55%,rgba(10,4,20,.2) 100%)}
 .sgn-hero-grad2{position:absolute;bottom:0;left:0;right:0;height:40%;background:linear-gradient(to top,rgba(10,4,20,.7),transparent)}
@@ -4877,11 +5151,11 @@ const NIVEL_CSS = `
 .sgn-fl a:hover{color:#6B21A8}
 
 /* FUNDADOR DARK THEME */
-.sgn-dark{background:#0A0414;color:white}
+.sgn-dark{background:#0A0414;color:white;min-height:100vh}
 @keyframes sgFundNum{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes sgFundPart{0%{transform:translateY(0) translateX(0);opacity:0}15%{opacity:.8}90%{opacity:.3}100%{transform:translateY(-130px) translateX(30px);opacity:0}}
 @keyframes sgFundBorder{0%,100%{border-color:rgba(201,168,76,.15)}50%{border-color:rgba(201,168,76,.4)}}
-.sgn-dark .sgn-nav{background:rgba(10,4,20,.85);border-color:rgba(201,168,76,.08);display:flex;align-items:center}
+.sgn-dark .sgn-nav{background:rgba(10,4,20,.85);border-color:rgba(201,168,76,.08)}
 .sgn-dark .sgn-logo-text{color:#E8C96A}
 .sgn-dark .sgn-back{color:rgba(255,255,255,.35)}.sgn-dark .sgn-back:hover{color:#E8C96A}
 .sgn-dark .sgn-cta{background:#C9A84C;color:#0A0414}
@@ -4901,7 +5175,7 @@ const NIVEL_CSS = `
 .sgn-dark .sgn-tit{color:white}
 .sgn-dark .sgn-sub{color:rgba(255,255,255,.45)}
 .sgn-why{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:rgba(255,255,255,.04);border-radius:20px;overflow:hidden;margin-bottom:88px}
-.sgn-why-item{padding:36px 32px;background:rgba(255,255,255,.015);transition:background .2s,transform .3s cubic-bezier(.22,1,.36,1);position:relative}@media(max-width:640px){.sgn-grid{grid-template-columns:1fr}.sgn-why{grid-template-columns:1fr}.sgn-stats{grid-template-columns:1fr}.sgn-meta{flex-direction:column;gap:16px}.sgn-hero-c{padding:24px}.sgn-tbl{font-size:11px}.sgn-tbl th,.sgn-tbl td{padding:9px 10px}.sgn-cta-inner{padding:32px 24px}.sgn-ben{flex-direction:column}.sgn-tbl{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}}
+.sgn-why-item{padding:36px 32px;background:rgba(255,255,255,.015);transition:background .2s,transform .3s cubic-bezier(.22,1,.36,1);position:relative}
 .sgn-why-item:hover{background:rgba(201,168,76,.04);transform:translateY(-2px)}
 .sgn-why-item::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(201,168,76,.15),transparent)}
 .sgn-wn{font-family:Georgia,serif;font-size:11px;font-weight:500;color:rgba(201,168,76,.4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
@@ -4918,7 +5192,7 @@ const NIVEL_CSS = `
 .sgn-dark .sgn-tbl tbody tr:nth-child(even){background:rgba(255,255,255,.02)}
 .sgn-dark .sgn-tbl tbody tr:nth-child(odd){background:rgba(255,255,255,.01)}
 .sgn-dark .sgn-tbl tbody tr.sgn-hl{background:rgba(201,168,76,.07) !important}
-.sgn-dark .sgn-tbl tbody tr:hover{background:rgba(201,168,76,.25) !important}.sgn-dark .sgn-tbl tbody tr:hover td{color:white !important;background:transparent}
+.sgn-dark .sgn-tbl tbody tr:hover{background:rgba(201,168,76,.05) !important}
 .sgn-dark .sgn-tbl td{color:rgba(255,255,255,.6);border-top:1px solid rgba(255,255,255,.03)}
 .sgn-dark .sgn-ts{color:white}.sgn-dark .sgn-hl .sgn-ts{color:#C9A84C}
 .sgn-dark .sgn-ti{color:rgba(255,255,255,.85)}.sgn-dark .sgn-hl .sgn-ti{color:#C9A84C}
@@ -4982,7 +5256,6 @@ const SgnTablaIngresos = ({pct}:{pct:number}) => {
 function NivelDetalle({nivel, setPage}:{nivel:"basica"|"intermedia"|"premium", setPage:(p:any)=>void}) {
 
   React.useEffect(()=>{
-    window.scrollTo(0,0);
     const style=document.createElement("style");
     style.id="sgn-css";
     if(!document.getElementById("sgn-css")) document.head.appendChild(style);
@@ -5044,7 +5317,7 @@ function NivelDetalle({nivel, setPage}:{nivel:"basica"|"intermedia"|"premium", s
       badge:"Nivel 3 · Premium · + $497/mes",
       bc:"rgba(201,168,76,0.4)",bt:"#FFD966",
       price:"$2.500",sub:"+ $497/mes · mín. 12 meses",rev:50,
-      img:"https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=1600&q=90&fit=crop&crop=top",
+      img:"https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=1600&q=90&fit=crop&crop=center",
       desc:"El nivel más completo. Para instructores que quieren el mayor impacto, la mayor visibilidad y el porcentaje de ingresos más alto disponible en la plataforma.",
       incluye:[
         ["Todo del Nivel Intermedia","Más todos los beneficios de Básica e Intermedia incluidos sin excepción."],
@@ -5062,7 +5335,7 @@ function NivelDetalle({nivel, setPage}:{nivel:"basica"|"intermedia"|"premium", s
   const nums = ["I","II","III","IV","V","VI"];
 
   return (
-    <div style={{background:"white",fontFamily:"'DM Sans',system-ui,sans-serif"}}>
+    <div style={{background:"white",minHeight:"100vh",fontFamily:"'DM Sans',system-ui,sans-serif"}}>
       <style>{NIVEL_CSS}</style>
 
       <nav className="sgn-nav">
@@ -5075,6 +5348,7 @@ function NivelDetalle({nivel, setPage}:{nivel:"basica"|"intermedia"|"premium", s
           <span className="sgn-logo-text">Solo Gracias</span>
         </button>
         <button className="sgn-back" onClick={()=>setPage("academia-instructores")}>← Academia</button>
+        <a href={`${WA_LINK.replace('Academia+Solo+Gracias','nivel+'+nivel)}`} target="_blank" rel="noopener noreferrer" className="sgn-cta">Postularme →</a>
       </nav>
 
       <section className="sgn-hero">
@@ -5083,7 +5357,6 @@ function NivelDetalle({nivel, setPage}:{nivel:"basica"|"intermedia"|"premium", s
         <div className="sgn-hero-grad2"/>
         <div className="sgn-hero-c">
           <div className="sgn-badge"><div className="sgn-badge-dot"/>{d.badge}</div>
-          <a href={`${WA_LINK.replace('Academia+Solo+Gracias','nivel+'+nivel)}`} target="_blank" rel="noopener noreferrer" style={{display:"inline-flex",alignItems:"center",background:"#6B21A8",color:"white",padding:"10px 24px",borderRadius:50,fontSize:13,fontWeight:600,textDecoration:"none",marginBottom:16}}>Postularme →</a>
           <h1 className="sgn-title">{d.price} <em className="sgn-title-gold">·</em><br/><span className="sgn-title-gold">{d.rev}%</span> tuyo</h1>
           <p className="sgn-desc">{d.desc}</p>
           <div className="sgn-meta">
@@ -5148,7 +5421,6 @@ function NivelDetalle({nivel, setPage}:{nivel:"basica"|"intermedia"|"premium", s
 function NivelFundador({setPage}:{setPage:(p:any)=>void}) {
 
   React.useEffect(()=>{
-    window.scrollTo(0,0);
     const style=document.createElement("style");
     style.id="sgn-css-fund";
     if(!document.getElementById("sgn-css-fund")) document.head.appendChild(style);
@@ -5223,20 +5495,24 @@ function NivelFundador({setPage}:{setPage:(p:any)=>void}) {
 
       <nav className="sgn-nav sgn-dark">
         <button className="sgn-logo sgn-back" onClick={()=>setPage("academia-instructores")}>
-          <svg width="34" height="34" viewBox="0 0 72 72" fill="none"><path d="M36 36 C36 33 34 31 31 31 C28 31 26 33 26 36 C26 40 29 43 33 44 C38 45 43 42 45 37 C47 31 44 24 39 21 C33 17 25 19 20 24 C14 30 14 39 18 46 C23 54 33 57 42 54 C52 50 58 40 56 30 C54 19 44 12 33 12 C21 12 11 20 9 32 C7 44 13 57 24 62 C36 68 51 65 59 54" stroke="#C9A84C" strokeWidth="2.5" strokeLinecap="round" fill="none"/><circle cx="36" cy="36" r="2.5" fill="#C9A84C"/></svg>
+          <svg width="34" height="34" viewBox="0 0 72 72" fill="none">
+            <path d="M36 36 C36 33 34 31 31 31 C28 31 26 33 26 36 C26 40 29 43 33 44 C38 45 43 42 45 37 C47 31 44 24 39 21 C33 17 25 19 20 24 C14 30 14 39 18 46 C23 54 33 57 42 54 C52 50 58 40 56 30 C54 19 44 12 33 12 C21 12 11 20 9 32 C7 44 13 57 24 62 C36 68 51 65 59 54"
+              stroke="#C9A84C" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <circle cx="36" cy="36" r="2.5" fill="#C9A84C"/>
+          </svg>
           <span className="sgn-logo-text">Solo Gracias</span>
         </button>
         <button className="sgn-back" onClick={()=>setPage("academia-instructores")}>← Academia</button>
+        <a href={`${WA_LINK.replace('Academia+Solo+Gracias','Instructor+Fundador')}`} target="_blank" rel="noopener noreferrer" className="sgn-cta sgn-dark">Postularme →</a>
       </nav>
 
       <section className="sgn-hero">
-        <img className="sgn-hero-img" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1600&q=90&fit=crop&crop=faces" alt="" style={{filter:"brightness(.55) saturate(.9)"}}/>
+        <img className="sgn-hero-img" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1600&q=90&fit=crop&crop=top" alt="" style={{filter:"brightness(.55) saturate(.9)"}}/>
         <div className="sgn-hero-grad"/>
         <div className="sgn-hero-grad2"/>
         <div id="sgn-fund-particles" style={{position:"absolute",inset:0,pointerEvents:"none",overflow:"hidden",zIndex:1}}/>
         <div className="sgn-fund-num">11</div>
         <div className="sgn-hero-c">
-          <a href={WA_LINK} target="_blank" rel="noopener noreferrer" style={{display:"inline-flex",alignItems:"center",background:"#C9A84C",color:"#0A0414",padding:"10px 24px",borderRadius:50,fontSize:13,fontWeight:600,textDecoration:"none",marginBottom:20}}>Postularme →</a>
           <div className="sgn-fund-eyebrow">Cupo exclusivo · Solo 11 lugares en la historia</div>
           <h1 className="sgn-title">Instructor<br/>Fundador</h1>
           <p className="sgn-fund-sub">#001 — #011 · Para siempre</p>
@@ -5255,7 +5531,7 @@ function NivelFundador({setPage}:{setPage:(p:any)=>void}) {
         <div className="sgn-stat"><div className="sgn-sval">∞</div><div className="sgn-skey">Legado permanente</div></div>
       </div>
 
-      <div style={{maxWidth:1000,margin:"0 auto",padding:"0 clamp(20px,4vw,40px)",paddingBottom:0}}>
+      <div style={{maxWidth:1000,margin:"0 auto",padding:"0 clamp(20px,4vw,40px)"}}>
 
         <div className="sgn-reveal" style={{marginBottom:48,textAlign:"center" as const}}>
           <p className="sgn-lbl">Por qué ser fundador</p>
@@ -5278,7 +5554,7 @@ function NivelFundador({setPage}:{setPage:(p:any)=>void}) {
           {beneficios.map((b)=>(
             <div key={b.n} className="sgn-ben">
               <div className="sgn-bicon">{b.n}</div>
-              <div><div className="sgn-bt">{b.t}</div><div className="sgn-bd">{b.d}</div></div>
+              <div><div className="sgn-bt">{b.t}</div><div className="sgn-bd">{b.desc}</div></div>
             </div>
           ))}
         </div>
@@ -5292,7 +5568,7 @@ function NivelFundador({setPage}:{setPage:(p:any)=>void}) {
           <p className="sgn-tnote">* Proyección estimada sobre el pool proporcional total.</p>
         </div>
 
-        <div className="sgn-price-card sgn-reveal" style={{marginBottom:0,paddingBottom:0}}>
+        <div className="sgn-price-card sgn-reveal">
           <div className="sgn-price-top">
             <div className="sgn-pcupo"><div className="sgn-pdot"/><span>Solo 11 lugares · Para siempre</span><div className="sgn-pdot"/></div>
             <p style={{fontSize:11,color:"rgba(255,255,255,.2)",letterSpacing:".1em",textTransform:"uppercase" as const,marginBottom:24}}>Inversión para ser Instructor Fundador</p>
@@ -5306,7 +5582,8 @@ function NivelFundador({setPage}:{setPage:(p:any)=>void}) {
         </div>
 
       </div>
-      <footer className="sgn-footer sgn-dark" style={{marginTop:0,paddingTop:16,paddingBottom:16}}>
+
+      <footer className="sgn-footer sgn-dark" style={{marginTop:80}}>
         <span className="sgn-fc">© 2026 Solo Gracias · sologracias.com</span>
         <div className="sgn-fl"><a href="#">Privacidad</a><a href="#">Términos</a></div>
       </footer>
