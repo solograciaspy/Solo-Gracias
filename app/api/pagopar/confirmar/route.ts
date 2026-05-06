@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Actualizar Supabase — activar acceso del usuario
-    const supabase = createClient();
+    const supabase = await createClient();
     const { error } = await supabase
       .from("subscriptions")
       .upsert({
