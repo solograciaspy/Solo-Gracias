@@ -5141,7 +5141,7 @@ const NIVEL_CSS = `
 .sgn-th{font-size:11px;color:#5E4A8A;font-style:italic}
 .sgn-tnote{font-size:11px;color:rgba(61,30,122,.3);margin-top:10px;font-style:italic;line-height:1.6;margin-bottom:88px}
 
-.sgn-cta{margin:0 0 88px;border-radius:20px;overflow:hidden}
+.sgn-cta-section{margin:0 0 88px;border-radius:20px;overflow:hidden}
 .sgn-cta-inner{padding:clamp(48px,7vw,72px);background:linear-gradient(135deg,#3D1E7A 0%,#6B21A8 60%,#8B2FC9 100%);position:relative;overflow:hidden;transition:box-shadow .4s}
 .sgn-cta-inner:hover{box-shadow:0 20px 60px rgba(107,33,168,.25)}
 .sgn-cta-inner::before{content:"";position:absolute;top:-80px;right:-80px;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.03)}
@@ -5157,14 +5157,14 @@ const NIVEL_CSS = `
 .sgn-fl a:hover{color:#6B21A8}
 
 /* FUNDADOR DARK THEME */
-.sgn-dark{background:#0A0414;color:white;min-height:100vh}
+.sgn-dark{background:#0A0414;color:white;min-height:100vh;overflow-x:hidden}
 @keyframes sgFundNum{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes sgFundPart{0%{transform:translateY(0) translateX(0);opacity:0}15%{opacity:.8}90%{opacity:.3}100%{transform:translateY(-130px) translateX(30px);opacity:0}}
 @keyframes sgFundBorder{0%,100%{border-color:rgba(201,168,76,.15)}50%{border-color:rgba(201,168,76,.4)}}
 .sgn-dark .sgn-nav{background:rgba(10,4,20,.85);border-color:rgba(201,168,76,.08)}
 .sgn-dark .sgn-logo-text{color:#E8C96A}
 .sgn-dark .sgn-back{color:rgba(255,255,255,.35)}.sgn-dark .sgn-back:hover{color:#E8C96A}
-.sgn-dark .sgn-cta{background:#C9A84C;color:#0A0414}
+.sgn-dark .sgn-cta{background:#C9A84C;color:#0A0414;width:auto;display:inline-block}
 .sgn-dark .sgn-cta:hover{background:#E8C96A}
 .sgn-fund-num{font-family:Georgia,serif;font-size:clamp(80px,14vw,160px);font-weight:300;color:rgba(201,168,76,.07);line-height:.85;position:absolute;top:clamp(40px,6vw,80px);left:clamp(40px,6vw,80px);letter-spacing:-.04em;pointer-events:none;animation:sgFundNum 1.5s 1s both}
 .sgn-fund-eyebrow{display:inline-flex;align-items:center;gap:10px;margin-bottom:20px;font-size:10px;font-weight:500;color:#E8C96A;letter-spacing:.16em;text-transform:uppercase}
@@ -5404,7 +5404,7 @@ function NivelDetalle({nivel, setPage}:{nivel:"basica"|"intermedia"|"premium", s
           <p className="sgn-tnote">* Proyección estimada sobre el pool proporcional total. Los valores dependen del número de instructores activos en la plataforma.</p>
         </div>
 
-        <div className="sgn-cta sgn-reveal">
+        <div className="sgn-cta-section sgn-reveal">
           <div className="sgn-cta-inner">
             <div className="sgn-cta-ey">Postulaciones abiertas</div>
             <h2 className="sgn-cta-tit">Los instructores son<br/>seleccionados.</h2>
