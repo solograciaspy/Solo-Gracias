@@ -5509,7 +5509,7 @@ function NivelFundador({setPage}:{setPage:(p:any)=>void}) {
           <span className="sgn-logo-text">Solo Gracias</span>
         </button>
         <button className="sgn-back" onClick={()=>setPage("academia-instructores")}>← Academia</button>
-        <a href={`${WA_LINK.replace('Academia+Solo+Gracias','Instructor+Fundador')}`} target="_blank" rel="noopener noreferrer" className="sgn-cta sgn-dark">Postularme →</a>
+        <a href={`${WA_LINK.replace('Academia+Solo+Gracias','Instructor+Fundador')}`} target="_blank" rel="noopener noreferrer" className="sgn-cta" style={{background:"#C9A84C",color:"#0A0414"}}>Postularme →</a>
       </nav>
 
       <section className="sgn-hero">
