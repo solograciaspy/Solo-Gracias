@@ -188,7 +188,6 @@ function Nav({page, setPage}:{page:string, setPage:(p:any)=>void}) {
           <button onClick={()=>goTo("academia-instructores")} style={{fontSize:14,color:"#444",background:"none",border:"none",cursor:"pointer"}}>Academia</button>
           <button onClick={()=>goTo("home","precios")} style={{fontSize:14,color:"#444",background:"none",border:"none",cursor:"pointer"}}>Precios</button>
           <button onClick={()=>goTo("comunidad")} style={{fontSize:14,color:"#444",background:"none",border:"none",cursor:"pointer"}}>Comunidad</button>
-          <button onClick={()=>goTo("bienvenida")} style={{fontSize:14,color:"#C9A84C",background:"none",border:"none",cursor:"pointer"}}>Test</button>
         </div>
 
         <div className="sg-nav-actions" style={{display:"flex",alignItems:"center",gap:12}}>
@@ -3803,11 +3802,18 @@ function Bienvenida({setPage}:{setPage:(p:any)=>void}) {
         height:64,
         background:"white",
         borderBottom:"1px solid #f0f0f0",
+        justifyContent:"space-between",
       }}>
         <div style={{display:"flex",alignItems:"center",gap:10}}>
           <SpiralLogo color="#3D1E7A" size={isMobile?32:36}/>
           <span style={{fontFamily:"Georgia,serif",color:"#3D1E7A",fontSize:isMobile?13:16,fontWeight:300,letterSpacing:"0.16em"}}>SOLO GRACIAS</span>
         </div>
+        <button
+          onClick={()=>setPage("home")}
+          style={{fontSize:13,color:"#6B21A8",background:"none",border:"none",cursor:"pointer",fontWeight:500,display:"flex",alignItems:"center",gap:5}}
+        >
+          ← Inicio
+        </button>
       </nav>
 
       {/* HERO */}
@@ -4049,9 +4055,9 @@ function AcademiaInstructores({setPage}:{setPage:(p:any)=>void}) {
   ];
 
   const niveles = [
-    {badge:"Nivel 1 — Básica",badgeColor:"rgba(155,109,255,0.3)",badgeText:"#C4ADFF",price:"$700",sub:"USD pago único",desc:"Certificado digital, sesión 1:1 de 60 min, fotos oficiales, bio profesional, 1 experiencia publicada. Vos grabás, nosotros editamos.",rev:"30%",img:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80&fit=crop",page:"nivel-basica"},
-    {badge:"Nivel 2 — Intermedia",badgeColor:"rgba(201,168,76,0.3)",badgeText:"#C9A84C",price:"$1.500",sub:"USD + $497/mes",desc:"Todo del Nivel 1 + sesión 1:1 de 90 min en vivo, rebranding Instagram completo, 2 experiencias exclusivas, video grabado y editado por nosotros.",rev:"40%",img:"https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&q=80&fit=crop",page:"nivel-intermedia"},
-    {badge:"Nivel 3 — Premium",badgeColor:"rgba(201,168,76,0.5)",badgeText:"#FFD966",price:"$2.500",sub:"USD + $497/mes",desc:"Todo del Nivel 2 + sesión 1:1 de 90 min en vivo, rebranding TODAS las redes, landing personal, 3 experiencias, Embajador Oficial.",rev:"50%",img:"https://images.unsplash.com/photo-1593811167562-9cef47bfc4d7?w=600&q=80&fit=crop",page:"nivel-premium"},
+    {badge:"Nivel 1 — Básica",badgeColor:"rgba(155,109,255,0.3)",badgeText:"#C4ADFF",price:"$500",sub:"USD pago único",desc:"Certificado digital, sesión 1:1 de 60 min, fotos oficiales, bio profesional, 1 experiencia publicada. Vos grabás, nosotros editamos.",rev:"25%",img:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80&fit=crop",page:"nivel-basica"},
+    {badge:"Nivel 2 — Intermedia",badgeColor:"rgba(201,168,76,0.3)",badgeText:"#C9A84C",price:"$1.200",sub:"USD + $497/mes",desc:"Todo del Nivel 1 + sesión 1:1 de 90 min en vivo, rebranding Instagram completo, 2 experiencias exclusivas, video grabado y editado por nosotros.",rev:"35%",img:"https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&q=80&fit=crop",page:"nivel-intermedia"},
+    {badge:"Nivel 3 — Premium",badgeColor:"rgba(201,168,76,0.5)",badgeText:"#FFD966",price:"$1.800",sub:"USD + $497/mes",desc:"Todo del Nivel 2 + sesión 1:1 de 90 min en vivo, rebranding TODAS las redes, landing personal, 3 experiencias, Embajador Oficial.",rev:"45%",img:"https://images.unsplash.com/photo-1593811167562-9cef47bfc4d7?w=600&q=80&fit=crop",page:"nivel-premium"},
   ];
 
   const superacion = [
@@ -4627,7 +4633,7 @@ function RegistroProgramas({setPage}:{setPage:(p:any)=>void}) {
             type="submit"
             style={{width:"100%",height:56,marginTop:8,background:"#6B21A8",color:"white",border:"none",borderRadius:14,fontFamily:"system-ui,sans-serif",fontSize:15,fontWeight:500,letterSpacing:"0.02em",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,transition:"opacity 0.2s"}}
           >
-            Desbloquear mis programas gratuitos →
+            Quiero ser parte →
           </button>
 
         </form>
@@ -4961,10 +4967,10 @@ function PromoModal({onClose, onCTA}:{onClose:()=>void, onCTA:()=>void}) {
           </div>
 
           <h2 style={{fontFamily:"Georgia,serif",fontSize:"clamp(20px,2.5vw,26px)",fontWeight:400,color:"#2D1B4E",lineHeight:1.2,marginBottom:10}}>
-            Activá tu acceso gratuito<br/><em style={{color:"#C9A84C"}}>hoy mismo</em>
+            Expande tus fronteras<br/><em style={{color:"#C9A84C"}}>hoy mismo</em>
           </h2>
           <p style={{fontSize:13,color:"#6B5F82",lineHeight:1.6,marginBottom:24,fontWeight:300}}>
-            Accedé a 3 programas de transformación personal gratuitos — de por vida. Creados desde adentro de nuestra cultura latinoamericana.
+            La plataforma trabaja por vos 24/7. Juntos haremos historia y tus conocimientos cambiarán la vida de millares de personas.
           </p>
 
           <form onSubmit={handleSubmit} style={{display:"flex",flexDirection:"column",gap:12}}>
@@ -5006,7 +5012,7 @@ function PromoModal({onClose, onCTA}:{onClose:()=>void, onCTA:()=>void}) {
                 marginTop:4,
               }}
             >
-              Desbloquear mis programas gratuitos →
+              Quiero ser parte →
             </button>
           </form>
 
@@ -5284,7 +5290,7 @@ function NivelDetalle({nivel, setPage}:{nivel:"basica"|"intermedia"|"premium", s
     basica:{
       badge:"Nivel 1 · Básica · Pago único",
       bc:"rgba(155,109,255,0.25)",bt:"#C4ADFF",
-      price:"$700",sub:"Pago único",rev:30,
+      price:"$500",sub:"Pago único",rev:25,
       img:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=90&fit=crop&crop=center",
       desc:"El punto de partida para instructores que quieren publicar su conocimiento, obtener certificación oficial y comenzar a generar ingresos pasivos desde el primer día.",
       incluye:[
@@ -5295,12 +5301,12 @@ function NivelDetalle({nivel, setPage}:{nivel:"basica"|"intermedia"|"premium", s
         ["Bio profesional","Redactada por el equipo — tono premium, posicionamiento claro, optimizada para IG y LinkedIn."],
         ["Kit de plantillas","1 plantilla post + 1 story diseñados para Instagram, alineados con la identidad visual."],
       ],
-      fase1:"El 30% del pool mensual proporcional, distribuido en su totalidad desde el día 1 de publicación. Simple, transparente y calculable en tiempo real. Tu porcentaje nunca baja del 30%.",
+      fase1:"El 25% del pool mensual proporcional, distribuido en su totalidad desde el día 1 de publicación. Simple, transparente y calculable en tiempo real. Tu porcentaje nunca baja del 25%.",
     },
     intermedia:{
       badge:"Nivel 2 · Intermedia · + $497/mes",
       bc:"rgba(201,168,76,0.25)",bt:"#C9A84C",
-      price:"$1.500",sub:"+ $497/mes · mín. 12 meses",rev:40,
+      price:"$1.200",sub:"+ $497/mes · mín. 12 meses",rev:35,
       img:"https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1600&q=90&fit=crop&crop=top",
       desc:"Para instructores que quieren presencia profesional completa en redes, más experiencias publicadas y un rebranding que los posicione como referentes en su área.",
       incluye:[
@@ -5311,12 +5317,12 @@ function NivelDetalle({nivel, setPage}:{nivel:"basica"|"intermedia"|"premium", s
         ["Aparición en sección Expertos","Visibilidad en sologracias.com como instructor destacado de la plataforma."],
         ["Ponente en evento online","Participación garantizada en 1 evento online con la comunidad de Solo Gracias."],
       ],
-      fase1:"El 40% del pool mensual proporcional desde el primer día de publicación. Transparente y calculable. Tu porcentaje nunca baja del 40% — es el piso garantizado.",
+      fase1:"El 35% del pool mensual proporcional desde el primer día de publicación. Transparente y calculable. Tu porcentaje nunca baja del 35% — es el piso garantizado.",
     },
     premium:{
       badge:"Nivel 3 · Premium · + $497/mes",
       bc:"rgba(201,168,76,0.4)",bt:"#FFD966",
-      price:"$2.500",sub:"+ $497/mes · mín. 12 meses",rev:50,
+      price:"$1.800",sub:"+ $497/mes · mín. 12 meses",rev:45,
       img:"https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=1600&q=90&fit=crop&crop=center",
       desc:"El nivel más completo. Para instructores que quieren el mayor impacto, la mayor visibilidad y el porcentaje de ingresos más alto disponible en la plataforma.",
       incluye:[
@@ -5327,7 +5333,7 @@ function NivelDetalle({nivel, setPage}:{nivel:"basica"|"intermedia"|"premium", s
         ["3 experiencias exclusivas","Grabadas y editadas por Solo Gracias con producción completa."],
         ["Embajador Oficial","8 posts + 16 stories por mes gestionados por SG · Mención en newsletter mensual."],
       ],
-      fase1:"El 50% del pool mensual proporcional — el máximo disponible en la plataforma — desde el primer día de publicación. Tu porcentaje nunca baja del 50%.",
+      fase1:"El 45% del pool mensual proporcional desde el primer día de publicación. Tu porcentaje nunca baja del 45%.",
     },
   };
 
@@ -5559,14 +5565,6 @@ function NivelFundador({setPage}:{setPage:(p:any)=>void}) {
           ))}
         </div>
 
-        <div className="sgn-reveal">
-          <p className="sgn-lbl">Proyección de ingresos</p>
-          <h2 className="sgn-tit" style={{fontSize:"clamp(24px,3.5vw,36px)",marginBottom:24}}>50% revenue share · Ingresos mensuales estimados</h2>
-        </div>
-        <div className="sgn-reveal sgn-d1" style={{marginBottom:88}}>
-          <SgnTablaIngresos pct={50}/>
-          <p className="sgn-tnote">* Proyección estimada sobre el pool proporcional total.</p>
-        </div>
 
         <div className="sgn-price-card sgn-reveal">
           <div className="sgn-price-top">
