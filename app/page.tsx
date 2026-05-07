@@ -4531,7 +4531,7 @@ export default function App() {
       {showPromoModal && (
         <PromoModal
           onClose={() => setShowPromoModal(false)}
-          onCTA={() => { setShowPromoModal(false); setPage("registro-programas"); }}
+          onCTA={() => { setShowPromoModal(false); setPage("academia-instructores"); }}
         />
       )}
 
