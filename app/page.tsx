@@ -4573,8 +4573,8 @@ function RegistroProgramas({setPage}:{setPage:(p:any)=>void}) {
   };
 
   return (
-    <div style={{minHeight:"100vh",background:"#fff",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"80px 24px 40px"}}>
-
+    <div style={{minHeight:"100vh",background:"#fff",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"80px 24px 40px",position:"relative"}}>
+      <button onClick={()=>setPage("home")} style={{position:"absolute",top:20,left:24,fontSize:13,color:"#6B21A8",background:"none",border:"none",cursor:"pointer",fontWeight:500,display:"flex",alignItems:"center",gap:5}}>← Volver</button>
       {/* Logo */}
       <button onClick={()=>setPage("home")} style={{display:"flex",alignItems:"center",gap:10,background:"none",border:"none",cursor:"pointer",marginBottom:40}}>
         <SpiralLogo color="#3D1E7A" size={42}/>
@@ -4701,9 +4701,9 @@ function ProgramasGratuitos({setPage}:{setPage:(p:any)=>void}) {
   const BD="rgba(61,30,122,0.1)";
 
   return (
-    <div style={{background:"#fff",color:V,fontFamily:"system-ui,sans-serif"}}>
+    <div style={{background:"#fff",color:V,fontFamily:"system-ui,sans-serif",position:"relative"}}>
 
-      {/* HERO */}
+      <button onClick={()=>setPage("home")} style={{position:"absolute",top:20,left:24,fontSize:13,color:"#6B21A8",background:"none",border:"none",cursor:"pointer",fontWeight:500,display:"flex",alignItems:"center",gap:5,zIndex:10}}>← Volver</button>      {/* HERO */}
       <section style={{padding:"80px 24px 64px",textAlign:"center",borderBottom:`1px solid ${BD}`}}>
         <div style={{display:"inline-flex",alignItems:"center",gap:6,padding:"5px 16px",border:"1px solid rgba(201,168,76,0.4)",borderRadius:50,fontSize:11,fontWeight:500,color:"#7B5800",background:"rgba(201,168,76,0.08)",letterSpacing:"0.08em",textTransform:"uppercase" as const,marginBottom:28}}>
           ✦ Acceso gratuito · De por vida
