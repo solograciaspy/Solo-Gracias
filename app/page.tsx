@@ -5071,7 +5071,7 @@ const tablaIngresos = (pct:number) => {
 
 // ─── HELPERS COMPARTIDOS ──────────────────────────────────────────────────────
 const NIVEL_CSS = `
-@keyframes sgNivNavIn{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes sgNivNavIn{from{opacity:0}to{opacity:1}}
 @keyframes sgNivHeroUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
 @keyframes sgNivImgZoom{from{transform:scale(1)}to{transform:scale(1.04)}}
 @keyframes sgNivShimmer{0%{background-position:200% center}100%{background-position:-200% center}}
@@ -5079,7 +5079,7 @@ const NIVEL_CSS = `
 @keyframes sgNivItemIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
 @keyframes sgNivFadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
-.sgn-nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;background:rgba(255,255,255,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(61,30,122,.07);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(24px,5vw,60px);animation:sgNivNavIn .6s cubic-bezier(.22,1,.36,1) both}
+.sgn-nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;background:rgba(255,255,255,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(61,30,122,.07);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(24px,5vw,60px);overflow:visible;animation:sgNivNavIn .4s ease both}
 .sgn-logo{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer;background:none;border:none}
 .sgn-logo-text{font-family:Georgia,serif;color:#3D1E7A;font-size:17px;font-weight:300;letter-spacing:.14em;text-transform:uppercase}
 .sgn-back{font-size:13px;color:#5E4A8A;background:none;border:none;cursor:pointer;transition:color .2s}
