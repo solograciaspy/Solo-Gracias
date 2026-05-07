@@ -1275,13 +1275,11 @@ function Membresia({setPage, onAuthClick}:{setPage:(p:any)=>void, onAuthClick:()
 // ─── PAGO ──────────────────────────────────────────────────────────────────────
 
 function Pago({setPage}:{setPage:(p:any)=>void}) {
-
   const [billing, setBilling] = useState<"monthly"|"annual">("annual");
-
   const [email, setEmail] = useState("");
-
   const [nombre, setNombre] = useState("");
-
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(()=>{
@@ -1291,144 +1289,106 @@ function Pago({setPage}:{setPage:(p:any)=>void}) {
     return ()=>window.removeEventListener("resize", check);
   },[]);
 
+  const handlePagar = async () => {
+    if (!nombre.trim() || !email.trim()) {
+      setError("Por favor completá tu nombre y correo electrónico.");
+      return;
+    }
+    setError("");
+    setLoading(true);
+    try {
+      const plan = billing === "annual" ? "esencia_anual" : "esencia_mensual";
+      const res = await fetch("/api/pagopar/crear-pedido", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan, nombre, email }),
+      });
+      const data = await res.json();
+      if (data.url_pago) {
+        window.location.href = data.url_pago;
+      } else {
+        setError("Error al conectar con Pagopar. Intentá de nuevo.");
+      }
+    } catch (err) {
+      setError("Error de conexión. Intentá de nuevo.");
+    }
+    setLoading(false);
+  };
+
   return (
-
     <main style={{minHeight:"100vh",background:"#f9f9f9",fontFamily:"system-ui,sans-serif"}}>
-
       <div style={{maxWidth:1000,margin:"0 auto",padding:isMobile?"24px 16px":"48px 24px",display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:isMobile?24:48,alignItems:"start"}}>
-
         <div>
-
           <button onClick={()=>setPage("membresia")} style={{background:"none",border:"none",cursor:"pointer",color:"#6B21A8",fontSize:14,fontWeight:500,marginBottom:24,display:"flex",alignItems:"center",gap:6,padding:0}}>
-
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B21A8" strokeWidth="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>Volver
-
           </button>
-
           <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:32}}>
-
             <SpiralLogo color="#3D1E7A" size={32}/>
-
             <span style={{fontFamily:"Georgia,serif",color:"#3D1E7A",fontSize:18,letterSpacing:"0.14em"}}>SOLO GRACIAS</span>
-
           </div>
-
           <div style={{background:"linear-gradient(135deg,#2D0F5E,#6B21A8)",borderRadius:20,padding:"28px",marginBottom:28,position:"relative",overflow:"hidden"}}>
-
             <div style={{position:"absolute",top:16,right:16,opacity:0.2}}><SpiralLogo color="white" size={80}/></div>
-
             <p style={{color:"#C9A84C",fontSize:11,fontWeight:700,letterSpacing:"0.16em",textTransform:"uppercase",margin:"0 0 8px"}}>Membresia Solo Gracias</p>
-
             <p style={{color:"white",fontSize:13,margin:"0 0 16px",opacity:0.8}}>Esencia — Acceso completo</p>
-
             <div style={{display:"flex",alignItems:"baseline",gap:8,marginBottom:8}}>
-
               <span style={{color:"white",fontSize:44,fontWeight:900,lineHeight:1}}>{billing==="annual"?"$8.25":"$9.99"}</span>
-
               <span style={{color:"rgba(255,255,255,0.6)",fontSize:15}}>/mes</span>
-
             </div>
-
             {billing==="annual"&&<p style={{color:"#C9A84C",fontSize:13,margin:"0 0 16px"}}>Facturado anualmente: $99/ano</p>}
-
           </div>
-
           <div style={{display:"flex",gap:8,background:"#eee",borderRadius:50,padding:4,marginBottom:28}}>
-
             <button onClick={()=>setBilling("monthly")} style={{flex:1,padding:"10px",borderRadius:50,border:"none",fontWeight:600,fontSize:14,cursor:"pointer",background:billing==="monthly"?"white":"transparent",color:billing==="monthly"?"#111":"#888"}}>Mensual</button>
-
             <button onClick={()=>setBilling("annual")} style={{flex:1,padding:"10px",borderRadius:50,border:"none",fontWeight:600,fontSize:14,cursor:"pointer",background:billing==="annual"?"white":"transparent",color:billing==="annual"?"#111":"#888",display:"flex",alignItems:"center",justifyContent:"center",gap:6}}>
-
               Anual {billing==="annual"&&<span style={{background:"#C9A84C",color:"#1A0838",fontSize:11,padding:"2px 8px",borderRadius:50,fontWeight:700}}>Ahorra 17%</span>}
-
             </button>
-
           </div>
-
         </div>
-
         <div style={{background:"white",borderRadius:24,padding:"36px",border:"1px solid #eee"}}>
-
           <h2 style={{fontSize:24,fontWeight:800,color:"#111",marginBottom:24}}>Comienza tu transformacion</h2>
-
           <p style={{color:"#888",fontSize:13,marginBottom:24}}>30 dias gratis · Cancela cuando quieras</p>
-
           <div style={{display:"flex",flexDirection:"column",gap:16,marginBottom:24}}>
-
             <div>
-
               <label style={{fontSize:13,fontWeight:600,color:"#333",display:"block",marginBottom:6}}>Nombre completo</label>
-
               <input value={nombre} onChange={e=>setNombre(e.target.value)} placeholder="Tu nombre" style={{width:"100%",padding:"12px 16px",borderRadius:12,border:"1px solid #ddd",fontSize:14,outline:"none",boxSizing:"border-box" as any}}/>
-
             </div>
-
             <div>
-
               <label style={{fontSize:13,fontWeight:600,color:"#333",display:"block",marginBottom:6}}>Correo electronico</label>
-
               <input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="tu@correo.com" style={{width:"100%",padding:"12px 16px",borderRadius:12,border:"1px solid #ddd",fontSize:14,outline:"none",boxSizing:"border-box" as any}}/>
-
             </div>
-
           </div>
-
           <div style={{background:"#f9f9f9",borderRadius:16,padding:"20px",marginBottom:24}}>
-
             <p style={{fontSize:13,fontWeight:700,color:"#111",margin:"0 0 12px"}}>Resumen del pedido</p>
-
             <div style={{display:"flex",justifyContent:"space-between",fontSize:14,color:"#444",marginBottom:8}}>
-
               <span>Membresia Esencia — {billing==="annual"?"Anual":"Mensual"}</span>
-
               <span style={{fontWeight:600}}>{billing==="annual"?"$99/ano":"$9.99/mes"}</span>
-
             </div>
-
             <div style={{display:"flex",justifyContent:"space-between",fontSize:14,color:"#22c55e",marginBottom:8}}>
-
               <span>30 dias gratis</span>
-
               <span style={{fontWeight:600}}>-${billing==="annual"?"99":"9.99"}</span>
-
             </div>
-
             <div style={{borderTop:"1px solid #eee",paddingTop:8,display:"flex",justifyContent:"space-between",fontSize:15,color:"#111",fontWeight:700}}>
-
               <span>Total hoy</span><span>$0.00</span>
-
             </div>
-
           </div>
-
-          <button onClick={()=>setPage("home")} style={{width:"100%",background:"#C9A84C",color:"#1A0838",fontWeight:700,fontSize:16,padding:"16px",borderRadius:50,border:"none",cursor:"pointer",marginBottom:16}}>Comenzar 30 dias gratis</button>
-
+          {error && <p style={{color:"#E24B4A",fontSize:13,marginBottom:12,textAlign:"center"}}>{error}</p>}
+          <button
+            onClick={handlePagar}
+            disabled={loading}
+            style={{width:"100%",background:loading?"#aaa":"#C9A84C",color:"#1A0838",fontWeight:700,fontSize:16,padding:"16px",borderRadius:50,border:"none",cursor:loading?"not-allowed":"pointer",marginBottom:16,transition:"background 0.2s"}}
+          >{loading?"Conectando con Pagopar...":"Ir a pagar con Pagopar →"}</button>
           <p style={{color:"#888",fontSize:12,textAlign:"center",marginBottom:24}}>Al continuar aceptas nuestros Terminos de Servicio y Politica de Privacidad.</p>
-
           <div style={{borderTop:"1px solid #eee",paddingTop:20}}>
-
             <p style={{color:"#888",fontSize:12,textAlign:"center",marginBottom:12}}>Metodos de pago aceptados</p>
-
             <div style={{display:"flex",gap:8,justifyContent:"center",flexWrap:"wrap"}}>
-
-              {["VISA","Mastercard","AMEX","PayPal","MercadoPago"].map(m=>(
-
+              {["VISA","Mastercard","AMEX","Pagopar"].map(m=>(
                 <div key={m} style={{border:"1px solid #eee",borderRadius:8,padding:"6px 12px",fontSize:12,fontWeight:700,color:"#555"}}>{m}</div>
-
               ))}
-
             </div>
-
           </div>
-
         </div>
-
       </div>
-
     </main>
-
   );
-
 }
 
 // ─── ACADEMIA ──────────────────────────────────────────────────────────────────
