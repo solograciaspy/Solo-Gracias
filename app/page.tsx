@@ -1278,6 +1278,7 @@ function Pago({setPage}:{setPage:(p:any)=>void}) {
   const [billing, setBilling] = useState<"monthly"|"annual">("annual");
   const [email, setEmail] = useState("");
   const [nombre, setNombre] = useState("");
+  const [cedula, setCedula] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isMobile, setIsMobile] = useState(false);
@@ -1301,7 +1302,7 @@ function Pago({setPage}:{setPage:(p:any)=>void}) {
       const res = await fetch("/api/pagopar/crear-pedido", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan, nombre, email }),
+        body: JSON.stringify({ plan, nombre, email, cedula: cedula.trim() || "0" }),
       });
       const data = await res.json();
       if (data.url_pago) {
@@ -1354,6 +1355,10 @@ function Pago({setPage}:{setPage:(p:any)=>void}) {
             <div>
               <label style={{fontSize:13,fontWeight:600,color:"#333",display:"block",marginBottom:6}}>Correo electronico</label>
               <input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="tu@correo.com" style={{width:"100%",padding:"12px 16px",borderRadius:12,border:"1px solid #ddd",fontSize:14,outline:"none",boxSizing:"border-box" as any}}/>
+              <div>
+              <label style={{fontSize:13,fontWeight:600,color:"#333",display:"block",marginBottom:6}}>Cédula o pasaporte <span style={{fontWeight:400,color:"#aaa"}}>(opcional)</span></label>
+              <input value={cedula} onChange={e=>setCedula(e.target.value)} placeholder="Para extranjeros: número de pasaporte" style={{width:"100%",padding:"12px 16px",borderRadius:12,border:"1px solid #ddd",fontSize:14,outline:"none",boxSizing:"border-box" as any}}/>
+            </div>
             </div>
           </div>
           <div style={{background:"#f9f9f9",borderRadius:16,padding:"20px",marginBottom:24}}>

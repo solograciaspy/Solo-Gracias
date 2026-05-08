@@ -13,7 +13,7 @@ const PLANES: Record<string, { monto: number; descripcion: string; id_producto: 
 
 export async function POST(req: NextRequest) {
   try {
-    const { plan, nombre, email } = await req.json();
+    const { plan, nombre, email, cedula } = await req.json();
 
     if (!PLANES[plan]) {
       return NextResponse.json({ error: "Plan inválido" }, { status: 400 });
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
         nombre,
         telefono: "",
         direccion: "",
-        documento: "",
+        documento: cedula || "0",
         coordenadas: "",
         razon_social: nombre,
         tipo_documento: "CI",
@@ -73,8 +73,6 @@ export async function POST(req: NextRequest) {
       forma_pago: 9,
     };
 
-    console.log("Enviando a Pagopar:", JSON.stringify(pedido));
-
     const res = await fetch("https://api.pagopar.com/api/comercios/2.0/iniciar-transaccion", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -97,7 +95,6 @@ export async function POST(req: NextRequest) {
     });
 
   } catch (err) {
-    console.log("Error interno:", String(err));
     return NextResponse.json({ error: "Error interno", detalle: String(err) }, { status: 500 });
   }
 }
