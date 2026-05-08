@@ -20,17 +20,13 @@ export async function POST(req: NextRequest) {
     }
 
     const { monto, descripcion, id_producto } = PLANES[plan];
-
-    // ID único del pedido
     const id_pedido_comercio = `SG-${Date.now()}`;
 
-    // Hash según documentación Pagopar: sha1(token_privado + id_pedido + monto_total)
     const token = crypto
       .createHash("sha1")
       .update(TOKEN_PRIVADO + id_pedido_comercio + String(monto))
       .digest("hex");
 
-    // Fecha máxima de pago: 24 horas desde ahora
     const fecha_maxima = new Date(Date.now() + 24 * 60 * 60 * 1000)
       .toISOString()
       .replace("T", " ")
@@ -77,6 +73,8 @@ export async function POST(req: NextRequest) {
       forma_pago: 9,
     };
 
+    console.log("Enviando a Pagopar:", JSON.stringify(pedido));
+
     const res = await fetch("https://api.pagopar.com/api/comercios/2.0/iniciar-transaccion", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -84,6 +82,7 @@ export async function POST(req: NextRequest) {
     });
 
     const data = await res.json();
+    console.log("Respuesta Pagopar:", JSON.stringify(data));
 
     if (!data.respuesta || !data.resultado?.[0]?.data) {
       return NextResponse.json({ error: "Error Pagopar", detalle: data }, { status: 500 });
@@ -98,6 +97,7 @@ export async function POST(req: NextRequest) {
     });
 
   } catch (err) {
+    console.log("Error interno:", String(err));
     return NextResponse.json({ error: "Error interno", detalle: String(err) }, { status: 500 });
   }
 }
