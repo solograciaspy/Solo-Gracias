@@ -1307,7 +1307,7 @@ function Pago({setPage}:{setPage:(p:any)=>void}) {
       if (data.url_pago) {
         window.location.href = data.url_pago;
       } else {
-        setError("Error al conectar con Pagopar. Intentá de nuevo.");
+        setError("Error Pagopar: " + JSON.stringify(data));
       }
     } catch (err) {
       setError("Error de conexión. Intentá de nuevo.");
