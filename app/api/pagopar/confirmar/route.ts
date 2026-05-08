@@ -7,42 +7,43 @@ const TOKEN_PRIVADO = "d0d47b2ccb402959125fcf5ff15fc299";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
+    const resultado = body.resultado?.[0];
 
-    const { nro_pedido, monto, hash_confirmacion, email_cliente, estado } = body;
+    if (!resultado) {
+      return NextResponse.json({ error: "Payload inválido" }, { status: 400 });
+    }
 
-    // Verificar hash de Pagopar
-    const hashEsperado = crypto
-      .createHash("sha512")
-      .update(TOKEN_PRIVADO + monto + nro_pedido)
+    const { hash_pedido, token, pagado, numero_pedido, monto } = resultado;
+
+    // Verificar hash: sha1(token_privado + hash_pedido)
+    const tokenEsperado = crypto
+      .createHash("sha1")
+      .update(TOKEN_PRIVADO + hash_pedido)
       .digest("hex");
 
-    if (hashEsperado !== hash_confirmacion) {
-      return NextResponse.json({ error: "Hash inválido" }, { status: 401 });
+    if (tokenEsperado !== token) {
+      return NextResponse.json({ error: "Token inválido" }, { status: 401 });
     }
 
     // Solo procesar pagos aprobados
-    if (estado !== "APROBADO") {
-      return NextResponse.json({ ok: false, estado });
+    if (!pagado) {
+      return NextResponse.json(body.resultado);
     }
 
-    // Actualizar Supabase — activar acceso del usuario
+    // Activar usuario en Supabase
     const supabase = await createClient();
-    const { error } = await supabase
-      .from("subscriptions")
-      .upsert({
-        email: email_cliente,
-        nro_pedido,
-        monto,
-        estado: "activo",
-        fecha_pago: new Date().toISOString(),
-      });
+    await supabase.from("subscriptions").upsert({
+      nro_pedido: numero_pedido,
+      hash_pedido,
+      monto,
+      estado: "activo",
+      fecha_pago: new Date().toISOString(),
+    });
 
-    if (error) {
-      return NextResponse.json({ error: "Error Supabase", detalle: error }, { status: 500 });
-    }
+    // Pagopar espera que devolvamos el mismo JSON que nos envió
+    return NextResponse.json(body.resultado);
 
-    return NextResponse.json({ ok: true });
   } catch (err) {
-    return NextResponse.json({ error: "Error interno" }, { status: 500 });
+    return NextResponse.json({ error: "Error interno", detalle: String(err) }, { status: 500 });
   }
 }
